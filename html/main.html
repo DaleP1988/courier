@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Courier</title>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Font Awsome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+    <!-- Extra CSS -->
+    <link rel="stylesheet" href="public/styles/styles.css">
+</head>
+<body class="teal grey lighten-3">
+    <header>
+        <nav class="cyan darken-4">
+            <div class="nav-wrapper">
+                <div class="row">
+                    <div class="col s12">
+                        <a href="#" data-target="sidenav-1" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
+                        <a href="#!" class="main-button"><h4 class="title marg-up-10">Courier</h4></a>
+                        <!-- Med-up nav buttons -->
+                        <div class="left-nav hide-on-small-only">
+                            <a href="#!" class="waves-effect waves-light btn-floating btn-large tooltipped white-text new-temp-btn cyan darken-4" data-position="bottom" data-tooltip="New Template"><i class="material-icons">format_color_text</i></a>
+                            <a href="#!" class="waves-effect waves-light btn-floating btn-large tooltipped white-text new-mlist-btn cyan darken-4" data-position="bottom" data-tooltip="New Mail List"><i class="material-icons">group_add</i></a>
+                            <a href="login.html" class="waves-effect waves-light btn-floating btn-large tooltipped white-text cyan darken-4" data-position="bottom" data-tooltip="Logout"><i class="material-icons">arrow_forward</i></a>
+                        </div>
+                        
+                        <!-- small devices nav buttons -->
+                        <div class="left-nav-md hide-on-med-and-up">
+                            <a class="dropdown-trigger btn-flat white-text center" href="#" data-target="dropdown1">Options</a>
+                            <ul id="dropdown1" class="dropdown-content">
+                                <li><a href="#!" class="new-temp-btn">New Template</a></li>
+                                <li><a href="#!" class="new-mlist-btn">New Mail List</a></li>
+                                <li><a href="login.html">Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- LEFT SIDEBAR -->
+    <ul id="sidenav-1" class="sidenav sidenav-fixed">
+        <li>
+            <div class="user-view">
+            <div class="background">
+                <img src="https://source.unsplash.com/300x200/?nature" class="sidenav-background">
+            </div>
+            <img class="circle" src="images/circle.jpg">
+            <span class="white-text name">Cefi Menda</span>
+            <span class="white-text email">CefiMenda@gmail.com</span>
+            </div>
+        </li>
+        <li><a class="waves-effect waves-cyan" href="#!">ItalianWine.com</a></li>
+        <li><a class="waves-effect waves-cyan user-mlist-btn" href="#!">Mail Lists</a></li>
+        <li><a class="waves-effect waves-cyan user-temp-btn" href="#!">Templates</a></li>
+        <li><a class="waves-effect waves-cyan about-us-btn" href="#!">About Us</a></li>
+        <li><a class="waves-effect waves-cyan setting-btn" href="#!">Settings</a></li>
+    </ul>
+
+    <!-- Main Page -->
+    <main id="main-area">
+        <h1 class="center title welcome">Welcome to Courier <span class="name">Cefi Menda</span></h1>
+    </main>
+
+    <!-- New Templates -->
+    <main id="new-templates-area" class="disappear">
+        <h1 class="center title">New Templates</h1>
+    </main>
+
+    <!-- New Mail List -->
+    <main id="new-mail-list-area" class="disappear">
+        <h1 class="center title">New Mail List</h1>
+    </main>
+
+    <!-- Users Mail List -->
+    <main id="user-mail-list-area" class="disappear">
+        <h1 class="center title">Users Mail List</h1>
+    </main>
+
+    <!-- Users Templates -->
+    <main id="user-templates-area" class="disappear">
+        <h1 class="center title">Users Templates</h1>
+    </main>
+
+    <!-- About Us -->
+    <main id="about-us-area" class="disappear">
+        <h1 class="center title">About Us</h1>
+    </main>
+
+    <!-- Settings -->
+    <main id="settings-area" class="disappear">
+        <h1 class="center title">Settings</h1>
+        <div class="row">
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="img-changer" placeholder="URL link only">
+                        <label for="img-changer">Change Profile Picture</label>
+                    </div>
+                    <div class="col s12">
+                        <a id="change-settings" type="submit" class="waves-effect waves-cyan btn cyan lighten-5 black-text">Change Settings</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="public/js/main.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // sidnav
+            var sidnav = document.querySelectorAll(".sidenav");
+            M.Sidenav.init(sidnav, {});
+
+            // tooltipped
+            var tooltipped = document.querySelectorAll(".tooltipped");
+            M.Tooltip.init(tooltipped, {});
+
+            // dropdown
+            var dropdown = document.querySelectorAll(".dropdown-trigger");
+            M.Dropdown.init(dropdown, {});
+        });
+    </script>
+
+
+</body>
+</html>

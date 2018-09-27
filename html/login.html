@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Team 7 - Project 2 -->
+    <title>Courier</title>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+    <!-- google sign in -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Font Awsome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+    <!-- Extra CSS -->
+    <link rel="stylesheet" href="public/styles/styles.css">
+</head>
+<body>
+    <!-- Changing background image -->
+    <img src="https://source.unsplash.com/1900x1080/?books" alt="background" id="login-background">
+
+
+    <!-- ///////////////////// REMEMBER TO REMOVE //////////////////////////////////// -->
+    <a href="main.html" id="remove" class="waves-effect waves-light btn-large cyan darken-3">main page</a>
+    <!-- ///////////////////// REMEMBER TO REMOVE //////////////////////////////////// -->
+
+
+    <!-- FIRST PAGE: ask users to Sign-up or Login -->
+    <div class="container" id="index-body">
+        <h1 class="title center white-text">Courier</h1>
+        <h6 class="letter-space-1 center white-text">Simply click and communicate</h6>
+
+        <!-- Our Sign in -->
+        <!-- <div class="row" id="login-buttons">
+            <div class="col s6 leftside center" >
+                <a id="sign-up" class="waves-effect waves-light btn-large cyan darken-3">Sign-up</a>
+            </div>
+
+            <div class="col s6 center">
+                <a id="login" class="waves-effect waves-cyan btn-large cyan lighten-5 black-text">Login</a>
+            </div>
+        </div> -->
+
+        <!-- Google sign in -->
+        <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+    </div>
+
+    <!-- Sign-up form -->
+    <div class="container disappear" id="sign-up-body">
+        <a class="btn-floating btn-large waves-effect waves-light cyan darken-1 back-arrow"><i class="material-icons">arrow_back</i></a>
+        <div class="row">
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="signup-first-name" type="text" class="validate">
+                        <label for="signup-first-name">First Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="signup-last-name" type="text" class="validate">
+                        <label for="signup-last-name">Last Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="signup-email" type="email" autocomplete="new-username">
+                        <label for="signup-email">Email</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="signup-password" type="password" autocomplete="new-password">
+                        <label for="signup-password">Password</label>
+                    </div>
+                </div>
+                <a id="sign-up-submit" type="submit" class="waves-effect waves-light btn cyan darken-3">Sign-up</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="container disappear" id="login-body">
+        <a class="btn-floating btn-large waves-effect waves-light cyan darken-1 back-arrow"><i class="material-icons">arrow_back</i></a>
+        <div class="row">
+            <form class="col s12">
+                <div class="row padding-top-50">
+                    <div class="input-field col s12">
+                        <input id="login-email" type="email" autocomplete="new-username">
+                        <label for="login-email">Email</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="login-password" type="password" autocomplete="new-password">
+                        <label for="login-password">Password</label>
+                    </div>
+                </div>
+                <a id="login-submit" type="submit" class="waves-effect waves-cyan btn cyan lighten-5 black-text">Login</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <!-- JS file -->
+    <script src="public/js/login.js"></script>
+
+    <script>
+        function onSignIn(googleUser) {
+            // Useful data for your client-side scripts:
+            var profile = googleUser.getBasicProfile();
+            console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+            console.log('Full Name: ' + profile.getName());
+            console.log('Given Name: ' + profile.getGivenName());
+            console.log('Family Name: ' + profile.getFamilyName());
+            console.log("Image URL: " + profile.getImageUrl());
+            console.log("Email: " + profile.getEmail());
+    
+            // The ID token you need to pass to your backend:
+            var id_token = googleUser.getAuthResponse().id_token;
+            console.log("ID Token: " + id_token);
+        };
+    </script>
+</body>
+</html>
