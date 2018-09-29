@@ -19,8 +19,13 @@ module.exports = function(app) {
         console.log(pages)
         
         if ("login is true" && pages!=="logoff") {
-            res.render("index", { page: {[pages]: true}, data:{other: true}} )
-            // res.render("index")
+            if (pages === "usermail") {
+                // get sequalizr data of all users group list with user id (reg.body?)
+                // need group id, group name and if there are 10+ email only get the first 10
+                res.render("index", { page: {[pages]: true}, data:{other: true}} )
+            } else {
+                res.render("index", { page: {[pages]: true}, data:{other: true}} )
+            }
         } else {
             res.render("login")
         }

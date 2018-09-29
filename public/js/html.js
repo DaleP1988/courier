@@ -1,10 +1,93 @@
 // VARIABLES
-var user
+var user = {}
 var emailArr = [] // needed for importing emails to mailLists table
 var manualRowCount = 1 // needed for create new manual rows
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// REMOVE
-user = {id:"4", firstName:"Katherine", lastName:"He", googleUser:"he.katherine@gmail.com"}
+// user = {id:"4", firstName:"Katherine", lastName:"He", googleUser:"he.katherine@gmail.com"}
+
+user.id = 4
+user.name = "katherine"
+console.log(user);
+
+
+// reset user when logoff
+$(".logoff").on("click", function() {
+    user = null
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+})
+
+// create user variable when logged on
+function onSignIn(googleUser) {
+    // Useful data for your client-side scripts:
+    var profile = googleUser.getBasicProfile();
+    user.id = profile.getId()
+    console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+    console.log('Full Name: ' + profile.getName());
+    console.log('Given Name: ' + profile.getGivenName());
+    console.log('Family Name: ' + profile.getFamilyName());
+    console.log("Image URL: " + profile.getImageUrl());
+    console.log("Email: " + profile.getEmail());
+
+    // The ID token you need to pass to your backend:
+    var id_token = googleUser.getAuthResponse().id_token;
+    console.log("ID Token: " + id_token);
+};
+
+
+// when goin to '/usermail' will get users groups ans list
+function createGroupCards() {
+    $.ajax({ url: "/usermail", method: "GET" })
+    .then(function (mailgroups) {
+
+        console.log(mailgroups);
+        console.log("------------------------------------");
+
+        for (var i = 0; i < mailgroups.length; i++) {
+
+            var waitList = $("#waitList");
+            var listItem = $("<li class='list-group-item mt-4'>");
+            listItem.append(
+                $("<h2>").text("Table #" + (i + 1)),
+                $("<hr>"),
+                $("<h2>").text("ID: " + mailgroups[i].customerID),
+                $("<h2>").text("Name: " + mailgroups[i].customerName),
+                $("<h2>").text("Email: " + mailgroups[i].customerEmail),
+                $("<h2>").text("Phone: " + mailgroups[i].phoneNumber)
+            );
+            waitList.append(listItem);
+        }
+    });
+}
+
+// when goin to '/usertemp' will get users groups ans list
+function createTempCards() {
+    $.ajax({ url: "/usertemp", method: "GET" })
+    .then(function (mailgroups) {
+
+        console.log(mailgroups);
+        console.log("------------------------------------");
+
+        for (var i = 0; i < mailgroups.length; i++) {
+
+            var waitList = $("#waitList");
+            var listItem = $("<li class='list-group-item mt-4'>");
+            listItem.append(
+                $("<h2>").text("Table #" + (i + 1)),
+                $("<hr>"),
+                $("<h2>").text("ID: " + mailgroups[i].customerID),
+                $("<h2>").text("Name: " + mailgroups[i].customerName),
+                $("<h2>").text("Email: " + mailgroups[i].customerEmail),
+                $("<h2>").text("Phone: " + mailgroups[i].phoneNumber)
+            );
+            waitList.append(listItem);
+        }
+    });
+}
+
 
 
 ///////////////////////////////
@@ -217,3 +300,4 @@ var resetManual = () => {
     $("#google-lable").val("")
     $("#google-share-link").val("")
 }
+
