@@ -14,12 +14,7 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 // Handlebars
-app.engine(
-  "handlebars",
-  exphbs({
-    defaultLayout: "main"
-  })
-);
+app.engine("handlebars",exphbs({defaultLayout: "main"}));
 app.set("view engine", "handlebars");
 
 // Routes
@@ -38,10 +33,7 @@ if (process.env.NODE_ENV === "test") {
 db.sequelize.sync(syncOptions).then(function() {
   app.listen(PORT, function() {
     console.log(
-      "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.",
-      PORT,
-      PORT
-    );
+      "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.", PORT, PORT);
   });
 });
 
