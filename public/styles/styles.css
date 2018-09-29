@@ -172,13 +172,6 @@ nav {
 /* ////////////////////////////////////// */
 /* ///////////// Main Area ////////////// */
 /* ////////////////////////////////////// */
-#first-area {
-  
-}
-.welcome {
-  margin-top: 100px;
-}
-
 .title-hr {
   width: 200px;
   margin-bottom: 50px;
@@ -186,15 +179,12 @@ nav {
 
 #settings-area,
 #about-us-area,
-#new-mail-list-area {
+#new-mail-list-area,
+#user-mail-list-area,
+#new-templates-area {
   padding: 10px 60px 10px 360px;
   overflow: auto;
   height: 90%;
-}
-
-.font-p {
-  font-size: 24px;
-  line-height: 50px;
 }
 
 .scrollbar-primary::-webkit-scrollbar {
@@ -205,6 +195,41 @@ nav {
   border-radius: 10px;
   background-color: #777;
 }
+
+/* First Page */
+.welcome {
+  margin-top: 100px;
+}
+
+/* New Template */
+.card-template {
+  position: relative;
+}
+
+.card .card-image .card-title {
+  padding: 5px;
+}
+
+.card-title {
+  position: absolute;
+  background-color: #00000098;
+  top: 50%;
+  width: 100%;
+  height: 50px;
+  opacity: 0;
+}
+
+.card-template:hover .card-title {
+  opacity: 1;
+}
+
+/* About Page */
+.font-p {
+  font-size: 24px;
+  line-height: 50px;
+}
+
+/* New Mail Group */
 
 
 /* ////////////////////////////////////// */
@@ -257,7 +282,9 @@ header, main, footer {
   
   #settings-area,
   #about-us-area,
-  #new-mail-list-area {
+  #new-mail-list-area,
+  #user-mail-list-area,
+  #new-templates-area {
     padding: 10px;
   }
 }
