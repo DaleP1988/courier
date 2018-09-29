@@ -1,0 +1,81 @@
+<!-- New Mail List -->
+<main id="new-mail-list-area" class="scrollbar scrollbar-primary">
+    <h1 class="center title">New Mail List</h1>
+    <hr class="title-hr center">
+    {{!-- <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRc1IFQEg9BuXjfa1jl0CXR7NnnsnDIa3ITYIeAX1N5QSOZq_zdVA41PpxRaSbkLYfBye9gcSmC5wbj/pubhtml?widget=true&amp;headers=false"></iframe> --}}
+    <div id="radio">
+        <h5>How would you like to import the new list?</h5>
+        <div class="row">
+            <form class="col s12">
+                <div class="row">
+                    <p>
+                    <label>
+                        <input class="with-gap" name="import-choice" type="radio" value="google" checked />
+                        <span class="black-text">Import from google drive</span>
+                    </label>
+                    </p>
+                    <p>
+                    <label>
+                        <input class="with-gap" name="import-choice" type="radio" value="manual" />
+                        <span>Manual entry</span>
+                    </label>
+                    </p>
+                    {{!-- <div class="col s12">
+                        <a id="new-mail-choice" type="submit" class="waves-effect waves-cyan btn cyan lighten-5 black-text">Choose</a>
+                    </div> --}}
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="choice">
+        <div id="google">
+            <div class="row">
+                <form class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="google-lable" type="text" class="validate">
+                            <label for="google-lable">Lable</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <input id="google-share-link" type="text" class="validate">
+                            <label for="google-share-link">Google Drive Share Link</label>
+                        </div>
+                        <div class="col s12">
+                            <a id="google-submit" type="submit" class="waves-effect waves-light btn cyan darken-3">Import Link</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="manual" class="disappear">
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s7">
+                        <input id="manual-lable" type="text" class="validate">
+                        <label for="manual-lable">Lable</label>
+                    </div>
+                    <div class="col offset-s1 s11">
+                        <div id="manual-rows" class="row">
+
+                            <div class="input-1">
+                                <div class="input-field col s6">
+                                    <input type="text" class="validate manual-name" placeholder="Contact Full Name">
+                                </div>
+                                <div class="input-field col s6">
+                                    <input type="email" class="validate manual-email" placeholder="Contact Email Address">
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <p>
+                            <span class="helper-text" data-error="wrong" data-success="right"></span>
+                        </p>
+                        <a id="manual-submit" type="submit" class="waves-effect waves-light btn cyan darken-3">Finished</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>

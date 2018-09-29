@@ -1,3 +1,314 @@
-.list-group-item {
-  line-height: 2.5;
+@import url('https://fonts.googleapis.com/css?family=Cormorant|Quattrocento+Sans');
+
+:root {
+  --trans: all 300ms ease-in-out;
+  --boxshadow: 5px 5px 20px 0 #ddd;
+  --title: 'Cormorant', serif;
+  --text: 'Quattrocento Sans', sans-serif;
+  --maincolor: #00838f;
+  --mainclose: #00B4C5;
+  --mainlight: #01E6FB;
+  --maindark: #004F56;
+}
+
+body, html {
+  overflow: hidden;
+  box-sizing: border-box;
+  height: 100vh;
+  font-family: var(--text);
+  position: relative;
+  /* background-image: url("https://images.unsplash.com/photo-1520699049698-acd2fccb8cc8?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1600&h=900&fit=crop&ixid=eyJhcHBfaWQiOjF9&s=bca87c1cad0b87a1ff77ac1814d45ed8"); */
+}
+
+#remove {
+  float: right;
+}
+
+.title {
+  font-family: var(--title);
+  letter-spacing: 3px;
+}
+
+.letter-space-1 {
+  letter-spacing: 1px;
+}
+
+.disappear {
+  display: none;
+}
+
+.padding-top-50 {
+  padding-top: 50px;
+}
+
+.marg-up-10 {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.bolder {
+  font-weight: bolder;
+  text-shadow: 1px 1px 1px #555;
+}
+
+/* ////////////////////////////////////// */
+/* //////////// Login page ////////////// */
+/* ////////////////////////////////////// */
+#login-background {
+  position: fixed;
+  object-fit: cover;
+  opacity: .5;
+  z-index: -2;
+}
+
+#index-body,
+#sign-up-body,
+#login-body {
+  height: 400px;
+  width: 600px;
+  min-width: 310px;
+  background-color: #0000008f;
+  margin-top: 10%;
+  padding: 8px 0;
+  border-radius: 8px;
+}
+
+/* Login buttons */
+#login-buttons {
+  margin-top: 100px;
+}
+
+#login-buttons div .btn-large {
+  width: 200px;
+}
+
+.waves-effect.waves-cyan .waves-ripple {
+  background-color: var(--maincolor);
+}
+
+#login-submit,
+#sign-up-submit {
+  margin-left: 20px;
+}
+
+.back-arrow {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+
+/* ////////////////////////////////////// */
+/* ////////////// top nav /////////////// */
+/* ////////////////////////////////////// */
+nav {
+  position: relative;
+}
+
+.left-nav,
+.left-nav-md {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 250px;
+  height: 64px;
+  z-index: 2;
+}
+
+.left-nav-md {
+  width: 170px;
+}
+
+.dropdown-trigger {
+  width: 150px;
+}
+
+.left-nav a {
+  margin: -5px 10px 0 10px;
+  height: 45px;
+  border: none;
+  box-shadow: none;
+}
+
+
+/* ////////////////////////////////////// */
+/* /////////////// sidenav ////////////// */
+/* ////////////////////////////////////// */
+.sidenav-background {
+  position: relative;
+  opacity: .7;
+}
+
+.background:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #000;
+  -moz-transition: background .3s linear;
+  -webkit-transition: background .3s linear;
+  -o-transition: background .3s linear;
+  transition: background .3s linear;
+}
+
+.sidenav .user-view {
+  margin-bottom: 0;
+}
+
+.sidenav li>a {
+  margin: 0;
+  padding: 10px 32px;
+  font-size: 20px;
+  height: 70px;
+}
+
+.sidenav .divider {
+  margin: 0;
+}
+
+/* ////////////////////////////////////// */
+/* ///////////// Main Area ////////////// */
+/* ////////////////////////////////////// */
+#first-area {
+  
+}
+.welcome {
+  margin-top: 100px;
+}
+
+.title-hr {
+  width: 200px;
+  margin-bottom: 50px;
+}
+
+#settings-area,
+#about-us-area,
+#new-mail-list-area {
+  padding: 10px 60px 10px 360px;
+  overflow: auto;
+  height: 90%;
+}
+
+.font-p {
+  font-size: 24px;
+  line-height: 50px;
+}
+
+.scrollbar-primary::-webkit-scrollbar {
+  background-color: #eee;
+}
+
+.scrollbar-primary::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #777;
+}
+
+
+/* ////////////////////////////////////// */
+/* ///////// OVERRIDE SECTION /////////// */
+/* ////////////////////////////////////// */
+/* login signup form -- override Materialize defalt colors*/
+input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid var(--maincolor);
+  webkit-box-shadow: 0 1px 0 0 var(--maincolor);
+  box-shadow: 0 1px 0 0 var(--maincolor);
+  color: #000;
+}
+
+input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-default):focus:not([readonly])+label, input[type=password]:not(.browser-default):focus:not([readonly])+label, input[type=email]:not(.browser-default):focus:not([readonly])+label, input[type=url]:not(.browser-default):focus:not([readonly])+label, input[type=time]:not(.browser-default):focus:not([readonly])+label, input[type=date]:not(.browser-default):focus:not([readonly])+label, input[type=datetime]:not(.browser-default):focus:not([readonly])+label, input[type=datetime-local]:not(.browser-default):focus:not([readonly])+label, input[type=tel]:not(.browser-default):focus:not([readonly])+label, input[type=number]:not(.browser-default):focus:not([readonly])+label, input[type=search]:not(.browser-default):focus:not([readonly])+label, textarea.materialize-textarea:focus:not([readonly])+label {
+  color: var(--maincolor);
+}
+
+/* override google preferences - if we are using GOOGLE LOGIN */
+.g-signin2 {
+  position: absolute;
+  margin-top: 40px;
+  left: 45%;
+}
+
+.abcRioButtonBlue {
+  background-color: #fff;
+  color: #4285f4;
+}
+
+.abcRioButtonContents {
+  font-weight: bolder;
+}
+
+span.abcRioButtonContents {
+  font-size: 15px !important;
+}
+
+header, main, footer {
+	padding-left: 300px;
+}
+
+
+/* ////////////////////////////////////// */
+/* //////////// Media Queries /////////// */
+/* ////////////////////////////////////// */
+@media only screen and (max-width : 992px) {
+	header, main, footer {
+		padding-left: 0;
+  }
+  
+  #settings-area,
+  #about-us-area,
+  #new-mail-list-area {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  #login-body {
+    margin-top: 30%;
+  }
+
+  #login-buttons div .btn-large {
+    width: 160px;
+  }
+}
+
+@media (max-width: 576px) {
+  #login-body {
+    margin-top: 40%;
+    width: 90%;
+    height: 350px;
+  }
+
+  #login-buttons {
+    margin-top: 60px;
+  }
+}
+
+@media (max-width: 425px) {
+  #login-body {
+    width: 98%;
+    margin-left: 1%;
+    height: 300px;
+  }
+
+  #login-buttons {
+    margin-top: 40px;
+  }
+
+  #login-buttons div .btn-large {
+    width: 135px;
+  }
+
+  .left-nav-md {
+    width: 110px;
+  }
+
+  .dropdown-trigger {
+    width: 90px;
+  }
+
+  .font-p {
+    font-size: 16px;
+    line-height: 32px;
+  }
 }

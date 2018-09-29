@@ -1,33 +1,104 @@
-<div id="home">
-  <div class="container">
-    <div class="row">
-      <div class="col-8 offset-2">
-        <h1>{{msg}}</h1>
-        <h2>This is our Home Page!</h2>
-        <form class="clearfix mb-4" action="POST">
-          <div class="form-group">
-            <label for="example-text">Example Text</label>
-            <input type="text" id="example-text" class="form-control" aria-describedby="example-text" placeholder="Enter Example Text">
-          </div>
-          <div class="form-group">
-            <label for="example-description">Example Description</label>
-            <textarea class="form-control" id="example-description" aria-describedby="example-description" placeholder="Enter Example Description"></textarea>
-          </div>
-          <button id="submit" class="btn btn-primary float-right">Submit</button>
-        </form>
-        <h3>Examples:</h3>
-        <ul id="example-list" class="list-group">
-          {{#each examples}}
-          <li data-id="{{this.id}}" class="list-group-item">
-            <a href="example/{{this.id}}">{{this.text}}</a>
-            <button class="btn btn-danger float-right delete">ｘ</button>
-          </li>
-          {{/each}}
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+<body class="teal grey lighten-3">
+    <header>
+        <nav class="cyan darken-4">
+            <div class="nav-wrapper">
+                <div class="row">
+                    <div class="col s12">
+                        <a href="#" data-target="sidenav-1" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
+                        <a href="/index" class="main-button"><h4 class="title marg-up-10">Courier</h4></a>
+                        <!-- Med-up nav buttons -->
+                        <div class="left-nav hide-on-small-only">
+                            <a href="/newtemp" class="waves-effect waves-light btn-floating btn-large tooltipped white-text new-temp-btn cyan darken-4" data-position="bottom" data-tooltip="New Template"><i class="material-icons">format_color_text</i></a>
+                            <a href="/newmail" class="waves-effect waves-light btn-floating btn-large tooltipped white-text new-mlist-btn cyan darken-4" data-position="bottom" data-tooltip="New Mail List"><i class="material-icons">group_add</i></a>
+                            <a href="/logoff" class="waves-effect waves-light btn-floating btn-large tooltipped white-text cyan darken-4" data-position="bottom" data-tooltip="Logout"><i class="material-icons">arrow_forward</i></a>
+                        </div>
+                        
+                        <!-- small devices nav buttons -->
+                        <div class="left-nav-md hide-on-med-and-up">
+                            <a class="dropdown-trigger btn-flat white-text center" href="#" data-target="dropdown1">Options</a>
+                            <ul id="dropdown1" class="dropdown-content">
+                                <li><a href="/newtemp" class="new-temp-btn">New Template</a></li>
+                                <li><a href="/newmail" class="new-mlist-btn">New Mail List</a></li>
+                                <li><a href="/logoff">Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="/js/index.js"></script>
+    <!-- LEFT SIDEBAR -->
+    <ul id="sidenav-1" class="sidenav sidenav-fixed">
+        <li>
+            <div class="user-view">
+            <div class="background">
+                <img src="images/sidebar-wallpaper.jpg" class="sidenav-background responsive-img">
+            </div>
+            <img class="circle" src="images/circle.jpg">
+            <span class="white-text name">Cefi Menda</span>
+            <span class="white-text email">CefiMenda@gmail.com</span>
+            </div>
+        </li>
+        <li><a href="#!" class="waves-effect waves-cyan" >ItalianWine.com</a></li>
+        <li><a href="/usermail" class="waves-effect waves-cyan user-mlist-btn">Mail Lists</a></li>
+        <li><a href="/usertemp" class="waves-effect waves-cyan user-temp-btn">Templates</a></li>
+        <li><a href="/about" class="waves-effect waves-cyan about-us-btn">About Us</a></li>
+        <li><a href="/setting" class="waves-effect waves-cyan setting-btn">Settings</a></li>
+    </ul>
+    {{#with page}}
+        {{#if index }}
+            {{> topbar/first }}
+        {{else}}
+            {{#if newtemp }}
+                {{> topbar/newtemp }}
+            {{else}}
+                {{#if newmail }}
+                    {{> topbar/newmail }}
+                {{else}}
+                    {{#if usertemp }}
+                        {{> sidebar/usertemp }}
+                    {{else}}
+                        {{#if usermail }}
+                            {{> sidebar/usermail }}
+                        {{else}}
+                            {{#if about }}
+                                {{> sidebar/about }}
+                            {{else}}
+                                {{#if setting }}
+                                    {{> sidebar/setting }}
+                                {{else}}
+                                    {{> topbar/first }}
+                                {{/if}}
+                            {{/if}}
+                        {{/if}}
+                    {{/if}}
+                {{/if}}
+            {{/if}}
+        {{/if}}
+    {{/with}}
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    
+    <!-- JS to read google sheets on front end -->
+    <script src="js/jsonp.js"></script>
+    <script src="js/sheet.js"></script>
+    
+    <script src="js/html.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // sidnav
+            var sidnav = document.querySelectorAll(".sidenav");
+            M.Sidenav.init(sidnav, {});
+
+            // tooltipped
+            var tooltipped = document.querySelectorAll(".tooltipped");
+            M.Tooltip.init(tooltipped, {});
+
+            // dropdown
+            var dropdown = document.querySelectorAll(".dropdown-trigger");
+            M.Dropdown.init(dropdown, {});
+        });
+    </script>
+</body>
