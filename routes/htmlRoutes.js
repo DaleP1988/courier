@@ -1,28 +1,28 @@
 // NOTES: need from backend user's name, check if logged in
-var db = require("../models");
+var db = require("../models")
 
 module.exports = function(app) {
 
     // load Login page or first page
     app.get("/", function(req, res) {
         res.render("index")
-    });
+    })
 
     // load Login page or all other pages
     app.get("/:pages", function(req, res) {
-        var pageArr = ["about", "newmail", "newtemp", "setting", "usermail", "usertemp", "", "first", "index"]
+        console.log("hello");
+        
+        var pageArr = ["about", "newmail", "newtemp", "setting", "usermail", "usertemp", "", "first", "index", "preview"]
         var pages = req.params.pages
-        console.log(pages)
-
         if (pageArr.indexOf(pages) > -1) {
             res.render(pages)
         } else {
             res.render("404")
         }
-    });
+    })
 
     // Render 404 page for any unmatched routes
     app.get("*", function(req, res) {
         res.render("404")
-    });
-};
+    })
+}
