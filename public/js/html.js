@@ -1,16 +1,17 @@
 $(function() {
 // VARIABLES
 var user = JSON.parse(sessionStorage.getItem('courieruser'))
+var prevData = JSON.parse(sessionStorage.getItem('courierchosen'))
 var emailArr = [] // needed for importing emails to mailLists table
 var manualRowCount = 1 // needed for create new manual rows
 
 // reset user when logoff
 $(".logoff").on("click", function() {
-    sessionStorage.removeItem('courieruser');
-    var auth2 = gapi.auth2.getAuthInstance();
+    sessionStorage.removeItem('courieruser')
+    var auth2 = gapi.auth2.getAuthInstance()
     auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
+      console.log('User signed out.')
+    })
 })
 
 ///////////////////////////////
@@ -25,9 +26,9 @@ $("#change-settings").on("click", function(event) {
     var changeImg = $("#img-changer").val().trim()
     var changebg = $("#bg-changer").val().trim()
     if (changeImg !== null && isUrlImage(changeImg)) {
-        $(".circle").attr("src", changeImg);
+        $(".circle").attr("src", changeImg)
     } else if (changebg !== null && isUrlImage(changebg)){
-        $(".sidenav-background").attr("src", changebg);
+        $(".sidenav-background").attr("src", changebg)
     }
 
     // Clear all
@@ -37,12 +38,12 @@ $("#change-settings").on("click", function(event) {
 
 // check if its link is an img
 var isUrlImage = (url) => {
-    url = url.split("?")[0];
-    var parts = url.split(".");
-    var extension = parts[parts.length-1];
-    var imageTypes = ["jpg","jpeg","tiff","png","gif","bmp"];
+    url = url.split("?")[0]
+    var parts = url.split(".")
+    var extension = parts[parts.length-1]
+    var imageTypes = ["jpg","jpeg","tiff","png","gif","bmp"]
     if(imageTypes.indexOf(extension) !== -1) {
-        return true;
+        return true
     }
 }
 
@@ -71,7 +72,7 @@ $("input[name=import-choice]").on("change", function() {
         $("#manual, #google").addClass("disappear")
     }
     resetManual()
-});
+})
 
 // submitting google worksheet and reading it
 $("#google-submit").on("click", function(event) {
@@ -90,7 +91,7 @@ $("#google-submit").on("click", function(event) {
             postToMailGroup(user.id, googleLable)
         }
     }).catch(err => {
-        console.log('Error', err);
+        console.log('Error', err)
     })
 })
 
@@ -130,7 +131,7 @@ var postToMailList = (GroupId, name, email) => {
 }
 
 // add and remove new row for manual entry
-$(document).on("keyup", ".manual-name, .manual-email", addRemoveManualRow);
+$(document).on("keyup", ".manual-name, .manual-email", addRemoveManualRow)
 
 function addRemoveManualRow() {
     var checkName = false
@@ -142,9 +143,9 @@ function addRemoveManualRow() {
             return checkName = false
         }
         else {
-            return checkName = true;
+            return checkName = true
         }
-    });
+    })
 
     // check if all emails are filled
     if (checkName) {
@@ -153,9 +154,9 @@ function addRemoveManualRow() {
                 return checkEmail = false
             }
             else {
-                return checkEmail = true;
+                return checkEmail = true
             }
-        });
+        })
     }
 
     // Create new div
@@ -222,6 +223,48 @@ var resetManual = () => {
 }
 
 ///////////////////////////////
+//////// NEW TEMPLATES ////////
+///////////////////////////////
+$(".card-template").on("click", function() {
+    var template = $(this).attr("data-template")
+    var tempImg = $(this).find(".card-image").find("img").attr("src")
+    $(".new-temp-prev ").empty()
+    $(".new-temp-prev ").append($("<h4>").addClass("center modal-temp-title").text(template))
+    $(".new-temp-prev ").append($("<img>").addClass("responsive-img").attr("src", tempImg))
+})
+
+$(".temp-take-btn").on("click", function() {
+    var tempChose = $(".modal-temp-title").text()
+    $(".choose-group").removeAttr("data-chosen")
+    $(".choose-group").attr("data-chosen", tempChose)
+
+    $(".mail-group-choose").removeClass("disappear")
+    $(".temp-back-btn").removeClass("disappear")
+    $(".new-temp-prev").addClass("disappear")
+    $(".temp-take-btn").addClass("disappear")
+})
+
+$(".temp-back-btn").on("click", function() {
+    $(".mail-group-choose").addClass("disappear")
+    $(".temp-back-btn").addClass("disappear")
+    $(".new-temp-prev").removeClass("disappear")
+    $(".temp-take-btn").removeClass("disappear")
+})
+
+$(document).on("click", ".choose-group", function() {
+    var choices = {}
+    choices.template = $(this).attr("data-chosen")
+    choices.groupid = $(this).attr("value")
+    choices.grouplable = $(this).attr("data-group")
+    choices.user = user.id
+
+    sessionStorage.removeItem('courierchosen')
+    sessionStorage.setItem('courierchosen', JSON.stringify(choices))
+
+    window.location = `http://localhost:3000/preview`
+})
+
+///////////////////////////////
 /////// USER MAIL LIST ////////
 ///////////////////////////////
 
@@ -232,12 +275,21 @@ $.get(`/api/mailgroup/${user.id}`, function(data) {
         var stringEmail = ""
         for(var j = 0; j < groupEmails.length; j++) {
             stringEmail = stringEmail + `${groupEmails[j].email} `
-            console.log(stringEmail);
         }
         var card = `<div class="card blue-grey darken-1 card-mail" value="${data[i].id}"><div class="card-content white-text"><span class="card-title card-mail-title">${data[i].lable}</span><p>${stringEmail}</p></div></div>`
+        var groupLi = `<div>${data[i].lable}<a class="secondary-content choose-group" value="${data[i].id} data-lable="${data[i].lable}"><i class="material-icons">send</i></a></div>`
         $("#user-group-cards").append($("<div>").addClass("col s12 m4 l3").html(card))
+        $(".mail-group-choose .collection").append($("<li>").addClass("collection-item").html(groupLi))
     }
-});
+//     if ($(".preview-group-title").attr("data-group") !== "") {
+//         console.log($(".preview-group-title").attr("data-group"));
+//     }
+})
+
+if ($("#preview-are").length > 0) {
+    var prevData = JSON.parse(sessionStorage.getItem('courierchosen'))
+    console.log(prevData);
+}
 
 
 
