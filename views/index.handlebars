@@ -1,104 +1,51 @@
-<body class="teal grey lighten-3">
-    <header>
-        <nav class="cyan darken-4">
-            <div class="nav-wrapper">
-                <div class="row">
-                    <div class="col s12">
-                        <a href="#" data-target="sidenav-1" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
-                        <a href="/index" class="main-button"><h4 class="title marg-up-10">Courier</h4></a>
-                        <!-- Med-up nav buttons -->
-                        <div class="left-nav hide-on-small-only">
-                            <a href="/newtemp" class="waves-effect waves-light btn-floating btn-large tooltipped white-text new-temp-btn cyan darken-4" data-position="bottom" data-tooltip="New Template"><i class="material-icons">format_color_text</i></a>
-                            <a href="/newmail" class="waves-effect waves-light btn-floating btn-large tooltipped white-text new-mlist-btn cyan darken-4" data-position="bottom" data-tooltip="New Mail List"><i class="material-icons">group_add</i></a>
-                            <a href="/logoff" class="waves-effect waves-light btn-floating btn-large tooltipped white-text cyan darken-4" data-position="bottom" data-tooltip="Logout"><i class="material-icons">arrow_forward</i></a>
-                        </div>
-                        
-                        <!-- small devices nav buttons -->
-                        <div class="left-nav-md hide-on-med-and-up">
-                            <a class="dropdown-trigger btn-flat white-text center" href="#" data-target="dropdown1">Options</a>
-                            <ul id="dropdown1" class="dropdown-content">
-                                <li><a href="/newtemp" class="new-temp-btn">New Template</a></li>
-                                <li><a href="/newmail" class="new-mlist-btn">New Mail List</a></li>
-                                <li><a href="/logoff">Logout</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
+<!-- Changing background image -->
+<img src="https://source.unsplash.com/1900x1080/?books" alt="background" id="login-background">
 
-    <!-- LEFT SIDEBAR -->
-    <ul id="sidenav-1" class="sidenav sidenav-fixed">
-        <li>
-            <div class="user-view">
-            <div class="background">
-                <img src="images/sidebar-wallpaper.jpg" class="sidenav-background responsive-img">
-            </div>
-            <img class="circle" src="images/circle.jpg">
-            <span class="white-text name">Cefi Menda</span>
-            <span class="white-text email">CefiMenda@gmail.com</span>
-            </div>
-        </li>
-        <li><a href="#!" class="waves-effect waves-cyan" >ItalianWine.com</a></li>
-        <li><a href="/usermail" class="waves-effect waves-cyan user-mlist-btn">Mail Lists</a></li>
-        <li><a href="/usertemp" class="waves-effect waves-cyan user-temp-btn">Templates</a></li>
-        <li><a href="/about" class="waves-effect waves-cyan about-us-btn">About Us</a></li>
-        <li><a href="/setting" class="waves-effect waves-cyan setting-btn">Settings</a></li>
-    </ul>
-    {{#with page}}
-        {{#if index }}
-            {{> topbar/first }}
-        {{else}}
-            {{#if newtemp }}
-                {{> topbar/newtemp }}
-            {{else}}
-                {{#if newmail }}
-                    {{> topbar/newmail }}
-                {{else}}
-                    {{#if usertemp }}
-                        {{> sidebar/usertemp }}
-                    {{else}}
-                        {{#if usermail }}
-                            {{> sidebar/usermail }}
-                        {{else}}
-                            {{#if about }}
-                                {{> sidebar/about }}
-                            {{else}}
-                                {{#if setting }}
-                                    {{> sidebar/setting }}
-                                {{else}}
-                                    {{> topbar/first }}
-                                {{/if}}
-                            {{/if}}
-                        {{/if}}
-                    {{/if}}
-                {{/if}}
-            {{/if}}
-        {{/if}}
-    {{/with}}
 
-    <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    
-    <!-- JS to read google sheets on front end -->
-    <script src="js/jsonp.js"></script>
-    <script src="js/sheet.js"></script>
-    
-    <script src="js/html.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // sidnav
-            var sidnav = document.querySelectorAll(".sidenav");
-            M.Sidenav.init(sidnav, {});
+<!-- ///////////////////// REMEMBER TO REMOVE //////////////////////////////////// -->
+<a href="/first" id="remove" class="waves-effect waves-light btn-large cyan darken-3">main page</a>
+<!-- ///////////////////// REMEMBER TO REMOVE //////////////////////////////////// -->
 
-            // tooltipped
-            var tooltipped = document.querySelectorAll(".tooltipped");
-            M.Tooltip.init(tooltipped, {});
 
-            // dropdown
-            var dropdown = document.querySelectorAll(".dropdown-trigger");
-            M.Dropdown.init(dropdown, {});
+<!-- FIRST PAGE: ask users to Sign-up or Login -->
+<div class="container" id="index-body">
+    <h1 class="title center white-text">Courier</h1>
+    <h6 class="letter-space-1 center white-text">Simply click and communicate</h6>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+</div>
+
+<!-- JQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+<script>
+    var user = {}
+    function onSignIn(googleUser) {
+        // Useful data for your client-side scripts:
+        var profile = googleUser.getBasicProfile();
+        // The ID token you need to pass to your backend:
+        var id_token = googleUser.getAuthResponse().id_token;
+        var id = profile.getId()
+
+        user.firstName = profile.getGivenName()
+        user.lastName = profile.getFamilyName()
+        user.googleUser = profile.getEmail()
+        user.img = profile.getImageUrl()
+
+        $.get(`/api/user/${user.googleUser}`, function(data) {
+            if(data) {
+                user.id = data.id
+                sessionStorage.removeItem('courieruser');
+                sessionStorage.setItem('courieruser', JSON.stringify(user));
+                window.location = window.location.href+"first"
+                
+            } else {
+                $.post("/api/user", user, function(result) {
+                    onSignIn(googleUser)
+                });
+            }
         });
-    </script>
-</body>
+
+    };
+</script>
+
+<script src="js/html.js"></script>

@@ -1,11 +1,17 @@
+$(function() {
 // VARIABLES
-var user
+var user = JSON.parse(sessionStorage.getItem('courieruser'))
 var emailArr = [] // needed for importing emails to mailLists table
 var manualRowCount = 1 // needed for create new manual rows
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// REMOVE
-user = {id:"4", firstName:"Katherine", lastName:"He", googleUser:"he.katherine@gmail.com"}
-
+// reset user when logoff
+$(".logoff").on("click", function() {
+    sessionStorage.removeItem('courieruser');
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+})
 
 ///////////////////////////////
 /////////// SETTINGS //////////
@@ -67,9 +73,6 @@ $("input[name=import-choice]").on("change", function() {
     resetManual()
 });
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// REMOVE
-// Test Link: https://docs.google.com/spreadsheets/d/17q0RB4OYPrfnjKx9JUwgaPtM4dvRnWkRozrhaqAovOw/edit?usp=sharing
-
 // submitting google worksheet and reading it
 $("#google-submit").on("click", function(event) {
     event.preventDefault()
@@ -96,7 +99,7 @@ var postToMailGroup = (userId, groupName) => {
     
     var newMailGroup = {
         lable: groupName,
-        UserId: userId
+        UserId: user.id
     }
 
     $.post("/api/mailgroup", newMailGroup)
@@ -217,3 +220,25 @@ var resetManual = () => {
     $("#google-lable").val("")
     $("#google-share-link").val("")
 }
+
+///////////////////////////////
+/////// USER MAIL LIST ////////
+///////////////////////////////
+
+// create the cards
+$.get(`/api/mailgroup/${user.id}`, function(data) {
+    for(var i = 0; i < data.length; i++) {
+        var groupEmails = data[i].MailLists
+        var stringEmail = ""
+        for(var j = 0; j < groupEmails.length; j++) {
+            stringEmail = stringEmail + `${groupEmails[j].email} `
+            console.log(stringEmail);
+        }
+        var card = `<div class="card blue-grey darken-1 card-mail" value="${data[i].id}"><div class="card-content white-text"><span class="card-title card-mail-title">${data[i].lable}</span><p>${stringEmail}</p></div></div>`
+        $("#user-group-cards").append($("<div>").addClass("col s12 m4 l3").html(card))
+    }
+});
+
+
+
+})
