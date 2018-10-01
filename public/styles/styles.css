@@ -2,7 +2,6 @@
 
 :root {
   --trans: all 300ms ease-in-out;
-  --boxshadow: 5px 5px 20px 0 #ddd;
   --title: 'Cormorant', serif;
   --text: 'Quattrocento Sans', sans-serif;
   --maincolor: #00838f;
@@ -17,7 +16,11 @@ body, html {
   height: 100vh;
   font-family: var(--text);
   position: relative;
-  /* background-image: url("https://images.unsplash.com/photo-1520699049698-acd2fccb8cc8?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1600&h=900&fit=crop&ixid=eyJhcHBfaWQiOjF9&s=bca87c1cad0b87a1ff77ac1814d45ed8"); */
+  background-color: #eee;
+}
+
+header, main, footer {
+	padding-left: 300px;
 }
 
 #remove {
@@ -51,6 +54,10 @@ body, html {
   text-shadow: 1px 1px 1px #555;
 }
 
+.waves-effect.waves-cyan .waves-ripple {
+  background-color: var(--maincolor);
+}
+
 /* ////////////////////////////////////// */
 /* //////////// Login page ////////////// */
 /* ////////////////////////////////////// */
@@ -58,12 +65,9 @@ body, html {
   position: fixed;
   object-fit: cover;
   opacity: .5;
-  z-index: -2;
 }
 
-#index-body,
-#sign-up-body,
-#login-body {
+#index-body {
   height: 400px;
   width: 600px;
   min-width: 310px;
@@ -73,28 +77,25 @@ body, html {
   border-radius: 8px;
 }
 
-/* Login buttons */
-#login-buttons {
-  margin-top: 100px;
+.login-sectioner,
+.first-sectioner {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-#login-buttons div .btn-large {
-  width: 200px;
+/* override google preferences - if we are using GOOGLE LOGIN */
+.abcRioButton {
+  margin: 70px auto;
 }
 
-.waves-effect.waves-cyan .waves-ripple {
-  background-color: var(--maincolor);
+.abcRioButtonContents {
+  font-weight: bolder;
 }
 
-#login-submit,
-#sign-up-submit {
-  margin-left: 20px;
-}
-
-.back-arrow {
-  position: absolute;
-  top: 10px;
-  left: 10px;
+span.abcRioButtonContents {
+  font-size: 15px !important;
 }
 
 
@@ -204,23 +205,55 @@ nav {
 /* New Template */
 .card-template {
   position: relative;
+  background: #000000b3;
 }
 
-.card .card-image .card-title {
-  padding: 5px;
+.card-template:hover {
+  cursor: pointer;
 }
 
-.card-title {
+.card-template::before, .card-template::after {
+  content: '';
   position: absolute;
-  background-color: #00000098;
-  top: 50%;
-  width: 100%;
-  height: 50px;
-  opacity: 0;
+  top: 1.25em;
+  bottom: 1.25em;
+  left: 1.25em;
+  right: 1.25em;
+  opacity: 1;
+  transition: -webkit-transform ease-out 250ms;
+  transition: transform ease-out 250ms;
+  transition: transform ease-out 250ms, -webkit-transform ease-out 250ms;
 }
 
-.card-template:hover .card-title {
-  opacity: 1;
+.card-template::before {
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  -webkit-transform: scale(0, 1);
+          transform: scale(0, 1);
+}
+.card-template::after {
+  border-left: 1px solid white;
+  border-right: 1px solid white;
+  -webkit-transform: scale(1, 0);
+          transform: scale(1, 0);
+}
+.card-template:hover::before {
+  -webkit-transform: scale(1.05, 1);
+          transform: scale(1.05, 1);
+}
+.card-template:hover::after {
+  -webkit-transform: scale(1, 1.05);
+          transform: scale(1, 1.05);
+}
+
+.card-img {
+  max-width: 100%;
+  display: block;
+  transition: opacity ease-out 250ms;
+}
+
+.card:hover .card-img {
+  opacity: .4;
 }
 
 /* About Page */
@@ -229,48 +262,25 @@ nav {
   line-height: 50px;
 }
 
-/* New Mail Group */
-
-
-/* ////////////////////////////////////// */
-/* ///////// OVERRIDE SECTION /////////// */
-/* ////////////////////////////////////// */
-/* login signup form -- override Materialize defalt colors*/
-input:not([type]):focus:not([readonly]), input[type=text]:not(.browser-default):focus:not([readonly]), input[type=password]:not(.browser-default):focus:not([readonly]), input[type=email]:not(.browser-default):focus:not([readonly]), input[type=url]:not(.browser-default):focus:not([readonly]), input[type=time]:not(.browser-default):focus:not([readonly]), input[type=date]:not(.browser-default):focus:not([readonly]), input[type=datetime]:not(.browser-default):focus:not([readonly]), input[type=datetime-local]:not(.browser-default):focus:not([readonly]), input[type=tel]:not(.browser-default):focus:not([readonly]), input[type=number]:not(.browser-default):focus:not([readonly]), input[type=search]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
-  border-bottom: 1px solid var(--maincolor);
-  webkit-box-shadow: 0 1px 0 0 var(--maincolor);
-  box-shadow: 0 1px 0 0 var(--maincolor);
-  color: #000;
+/* User Mail Group */
+.card-mail-title {
+  text-transform: uppercase;
 }
 
-input:not([type]):focus:not([readonly])+label, input[type=text]:not(.browser-default):focus:not([readonly])+label, input[type=password]:not(.browser-default):focus:not([readonly])+label, input[type=email]:not(.browser-default):focus:not([readonly])+label, input[type=url]:not(.browser-default):focus:not([readonly])+label, input[type=time]:not(.browser-default):focus:not([readonly])+label, input[type=date]:not(.browser-default):focus:not([readonly])+label, input[type=datetime]:not(.browser-default):focus:not([readonly])+label, input[type=datetime-local]:not(.browser-default):focus:not([readonly])+label, input[type=tel]:not(.browser-default):focus:not([readonly])+label, input[type=number]:not(.browser-default):focus:not([readonly])+label, input[type=search]:not(.browser-default):focus:not([readonly])+label, textarea.materialize-textarea:focus:not([readonly])+label {
-  color: var(--maincolor);
+.card-mail {
+  transition: opacity ease-out 250ms;
+  height: 210px;
+  overflow:hidden;
+  border-right: 10px solid #546e7a;
+  border-bottom: 10px solid #546e7a;
 }
 
-/* override google preferences - if we are using GOOGLE LOGIN */
-.g-signin2 {
-  position: absolute;
-  margin-top: 40px;
-  left: 45%;
+.card-mail:hover {
+  cursor: pointer;
+  box-shadow: 5px 5px 20px 0 #888;
+  margin-top: -2px;
+  margin-left: -2px;
 }
-
-.abcRioButtonBlue {
-  background-color: #fff;
-  color: #4285f4;
-}
-
-.abcRioButtonContents {
-  font-weight: bolder;
-}
-
-span.abcRioButtonContents {
-  font-size: 15px !important;
-}
-
-header, main, footer {
-	padding-left: 300px;
-}
-
 
 /* ////////////////////////////////////// */
 /* //////////// Media Queries /////////// */

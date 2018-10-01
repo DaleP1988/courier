@@ -1,0 +1,36 @@
+<!-- JQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+<!-- JS to read google sheets on front end -->
+<script src="js/jsonp.js"></script>
+<script src="js/sheet.js"></script>
+
+<script src="js/html.js"></script>
+<script>
+    $(function() {
+        if (sessionStorage.getItem("courieruser") === null) {
+            window.location = "http://localhost:3000/"
+        } else {
+            var user = JSON.parse(sessionStorage.getItem('courieruser'))
+                if (user.img !== "") {
+                    $(".circle").attr("src", user.img)
+                }
+                $(".welcome .name").text(user.firstName)
+                $(".user-view .email").text(user.googleUser)
+                $(".user-view .name").text(`${user.firstName} ${user.lastName}`)
+        }
+    })
+    document.addEventListener("DOMContentLoaded", function() {
+        // sidnav
+        var sidnav = document.querySelectorAll(".sidenav");
+        M.Sidenav.init(sidnav, {});
+
+        // tooltipped
+        var tooltipped = document.querySelectorAll(".tooltipped");
+        M.Tooltip.init(tooltipped, {});
+
+        // dropdown
+        var dropdown = document.querySelectorAll(".dropdown-trigger");
+        M.Dropdown.init(dropdown, {});
+    });
+</script>

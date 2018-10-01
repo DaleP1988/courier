@@ -8,6 +8,53 @@ module.exports = function(app) {
 //     });
 //   });
 
+    // Get user's mail group and emails
+    // app.get("/api/mailgroup/:userid", function(req, res) {
+    //     var query = {Userid: req.params.userid}
+    //     db.MailGroup.findAll({
+    //         where: query,
+    //         include: [ db.MailList]
+    //     }).then(function(results) {
+    //         res.json(results);
+    //     });
+    // });
+
+    // Find User info
+    app.get("/api/user/:email", function(req, res) {
+        db.User.findOne({
+          where: {
+            googleUser: req.params.email
+          }
+        }).then(function(result) {
+            if(result) {
+                res.json(result);
+            } else {
+                res.json(false);
+            }
+          
+        });
+    });
+
+    // Find Mail Group and List for user
+    app.get("/api/mailgroup/:user", function(req, res) {
+        // var query = {Userid: req.params.user}
+        var query = {Userid: "1"}
+        db.MailGroup.findAll({
+            where: query,
+            include: [ db.MailList]
+        }).then(function(results) {
+            res.json(results);
+        });
+    });
+
+    // create Users
+    app.post("/api/user", function(req, res) {
+        db.User.create(req.body).then(function(result) {
+            res.json(result);
+        });
+    });
+
+
     // Create Mail Group
     app.post("/api/mailgroup", function(req, res) {
         db.MailGroup.create(req.body)

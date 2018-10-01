@@ -1,0 +1,47 @@
+<header>
+    <nav class="cyan darken-4">
+        <div class="nav-wrapper">
+            <div class="row">
+                <div class="col s12">
+                    <a href="#" data-target="sidenav-1" class="left sidenav-trigger hide-on-medium-and-up"><i class="material-icons">menu</i></a>
+                    <h4 class="title marg-up-10">Courier</h4>
+                    <!-- Med-up nav buttons -->
+                    <div class="left-nav hide-on-small-only">
+                        <a href="/newtemp" class="waves-effect waves-light btn-floating btn-large tooltipped white-text new-temp-btn cyan darken-4" data-position="bottom" data-tooltip="New Template"><i class="material-icons">format_color_text</i></a>
+                        <a href="/newmail" class="waves-effect waves-light btn-floating btn-large tooltipped white-text new-mlist-btn cyan darken-4" data-position="bottom" data-tooltip="New Mail List"><i class="material-icons">group_add</i></a>
+                        <a href="/index" class="waves-effect waves-light btn-floating btn-large tooltipped white-text cyan darken-4 logoff" data-position="bottom" data-tooltip="Logout"><i class="material-icons">arrow_forward</i></a>
+                    </div>
+                    
+                    <!-- small devices nav buttons -->
+                    <div class="left-nav-md hide-on-med-and-up">
+                        <a class="dropdown-trigger btn-flat white-text center" href="#" data-target="dropdown1">Options</a>
+                        <ul id="dropdown1" class="dropdown-content">
+                            <li><a href="/newtemp" class="new-temp-btn">New Template</a></li>
+                            <li><a href="/newmail" class="new-mlist-btn">New Mail List</a></li>
+                            <li><a href="/index" class="logoff">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- LEFT SIDEBAR -->
+<ul id="sidenav-1" class="sidenav sidenav-fixed">
+    <li>
+        <div class="user-view">
+            <div class="background">
+                <img src="images/sidebar-wallpaper.jpg" class="sidenav-background responsive-img">
+            </div>
+            <img class="circle" src="images/circle.jpg">
+            <span class="white-text name">User</span>
+            <span class="white-text email"></span>
+        </div>
+    </li>
+    <li><a href="#!" class="waves-effect waves-cyan" >ItalianWine.com</a></li>
+    <li><a href="/usermail" class="waves-effect waves-cyan user-mlist-btn">Mail Lists</a></li>
+    <li><a href="/usertemp" class="waves-effect waves-cyan user-temp-btn">Templates</a></li>
+    <li><a href="/about" class="waves-effect waves-cyan about-us-btn">About Us</a></li>
+    <li><a href="/setting" class="waves-effect waves-cyan setting-btn">Settings</a></li>
+</ul>
