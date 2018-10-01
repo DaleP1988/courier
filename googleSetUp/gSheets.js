@@ -13,6 +13,8 @@ const TOKEN_PATH = 'token.json';
 //   authorize(JSON.parse(content), listMajors);
 // });
 
+//========================================================================================
+//1) GET AUTHORIZATION
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
  * given callback function.
@@ -31,7 +33,6 @@ function authorize(credentials, callback) {
     callback(oAuth2Client);
   });
 }
-
 /**
  * Get and store new token after prompting for user authorization, and then
  * execute the given callback with the authorized OAuth2 client.
@@ -62,31 +63,14 @@ function getNewToken(oAuth2Client, callback) {
     });
   });
 }
+//========================================================================================
 
-/**
- * Prints the names and majors of students in a sample spreadsheet:
- * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
- * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
- */
-function listMajors(auth) {
-  const sheets = google.sheets({ version: 'v4', auth });
-  sheets.spreadsheets.values.get({
-    spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
-    range: 'Class Data!A2:E',
-  }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    const rows = res.data.values;
-    if (rows.length) {
-      console.log('Name, Major:');
-      // Print columns A and E, which correspond to indices 0 and 4.
-      rows.map((row) => {
-        console.log(`${row[0]}, ${row[4]}`);
-      });
-    } else {
-      console.log('No data found.');
-    }
-  });
-}
+
+//2) insert google Sheet
+//3) insert google Script
+//4) deploy google Script
+//5) authorize google Script
+//6) store google Script http request target URL
 
 
 
