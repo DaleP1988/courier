@@ -85,13 +85,19 @@ module.exports = function(app) {
   });
   app.post("/api/installation/authUrl", function(req, res) {
     var getTokens = require("../googleSetUp/gAuthToken");
-
     getTokens(req.body.data, oAuth2Client).then(function(token) {
       if (!token.access_token) {
         res.send("failure");
       } else {
-        
-        res.send("success");
+        var courierSheetId;
+        oAuth2Client.setCredentials(token);
+        var createSheet = require("../googleSetUp/gAddSheet")
+        createSheet(oAuth2Client).then(function(response){
+          courierSheetId = response.spreadsheetId;
+          console.log(response);
+          oAuth2Client = null;
+          res.send("success");
+        });
       }
     });
   });

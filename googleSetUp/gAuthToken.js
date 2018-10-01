@@ -12,7 +12,6 @@ function returnToken(code, oAuth2Client) {
                 rej(err)
                 console.error('Error while trying to retrieve access token', err);
             }
-            oAuth2Client.setCredentials(token);
             // Store the token to disk for later program executions
             res(token)
         });
