@@ -1,1 +1,7 @@
 node_modules
+npm-debug.log
+ignore
+.env
+package-lock.json
+package.json
+credentials.json
