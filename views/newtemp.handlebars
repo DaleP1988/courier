@@ -6,7 +6,7 @@
     <div class="row">
 
         <div class="col s12 m4">
-            <div class="card card-template">
+            <div class="card card-template modal-trigger" data-template="default-pink" href="#modal-temp">
                 <div class="card-image">
                     <img class="card-img" src="/images/colorways/pink.png">
                 </div>
@@ -14,7 +14,7 @@
         </div>
 
         <div class="col s12 m4">
-            <div class="card card-template">
+            <div class="card card-template modal-trigger" data-template="default-orange" href="#modal-temp">
                 <div class="card-image">
                     <img class="card-img" src="/images/colorways/orange.png">
                 </div>
@@ -22,7 +22,7 @@
         </div>
 
         <div class="col s12 m4">
-            <div class="card card-template">
+            <div class="card card-template modal-trigger" data-template="default-green" href="#modal-temp">
                 <div class="card-image">
                     <img class="card-img" src="/images/colorways/huntergreen.png">
                 </div>
@@ -30,7 +30,7 @@
         </div>
 
         <div class="col s12 m4">
-            <div class="card card-template">
+            <div class="card card-template modal-trigger" data-template="default-blue" href="#modal-temp">
                 <div class="card-image">
                     <img class="card-img" src="/images/colorways/babyblue.png">
                 </div>
@@ -38,7 +38,7 @@
         </div>
 
         <div class="col s12 m4">
-            <div class="card card-template">
+            <div class="card card-template modal-trigger" data-template="default-dark-blue" href="#modal-temp">
                 <div class="card-image">
                     <img class="card-img" src="/images/colorways/navy.png">
                 </div>
@@ -46,7 +46,7 @@
         </div>
 
         <div class="col s12 m4">
-            <div class="card card-template">
+            <div class="card card-template modal-trigger" data-template="default-black" href="#modal-temp">
                 <div class="card-image">
                     <img class="card-img" src="/images/colorways/black.png">
                 </div>
@@ -55,5 +55,22 @@
 
     </div>
 </main>
+
+
+<!-- Modal Structure -->
+<div id="modal-temp" class="modal scrollbar scrollbar-primary">
+    <div class="modal-content new-temp-prev">
+    </div>
+    <div class="modal-content mail-group-choose disappear">
+        <ul class="collection">
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <a class="waves-effect waves-green temp-back-btn btn-flat disappear">Back</a>
+        <a class="waves-effect waves-green temp-take-btn btn-flat">Take Template</a>
+        <a class="modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+</div>
+          
 
  {{> bottom }}
