@@ -88,3 +88,4 @@ $(".setting-btn").on("click", function() {
     $("#about-us-area").addClass("disappear")
     $("#main-area").addClass("disappear")
 })
+
