@@ -91,12 +91,23 @@ module.exports = function(app) {
       } else {
         var courierSheetId;
         oAuth2Client.setCredentials(token);
-        var createSheet = require("../googleSetUp/gAddSheet")
-        createSheet(oAuth2Client).then(function(response){
+        var createSheet = require("../googleSetUp/gAddSheet");
+        createSheet(oAuth2Client).then(function(response) {
           courierSheetId = response.spreadsheetId;
           console.log(response);
-          oAuth2Client = null;
-          res.send("success");
+          var createScript = require("../googleSetUp/gAddScript");
+          createScript(oAuth2Client, courierSheetId).then(function(response) {
+            console.log(response);
+            var userReqLink = response.reqLink.webApp.url;
+            var userId = JSON.parse(req.body.user).id;
+            db.User.update(
+              { emailReqLink: userReqLink },
+              { where: { id: userId } }
+            ).then(function(result) {
+              oAuth2Client = null;
+              res.send(response.authLink);
+            });
+          });
         });
       }
     });

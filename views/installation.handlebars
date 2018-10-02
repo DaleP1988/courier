@@ -34,6 +34,9 @@
         <div>
             <h6 id="resultMessage" class="center title"></h6>
         </div>
+        <div>
+            <a id="scriptAuth" style="display:none"><button class="btn">Authorize Script</button></a>
+        </div>
     </div>
 </main>
 
@@ -50,18 +53,19 @@
         $("#authSubmit").click(function () {
             event.preventDefault()
             $(".preloader-wrapper").show()
-            $.post("/api/installation/authUrl", { data: $("#codeInput").val().trim() }, function (response) {
-                $(".preloader-wrapper").hide()
-                if (response == "success") {
-                    $("#resultMessage").text("Sign up Successful! You can now use courier to send bulk email.")
+            $.post("/api/installation/authUrl", { data: $("#codeInput").val().trim(), user: sessionStorage.getItem("courieruser") }, function (response) {
+                $(".preloader-wrapper").hide();
+                if (typeof response === "string") {
+                    $("#resultMessage").text("Installation Successful. Please use the button below to authorize the script and then you can start sending bulk emails!");
+                    $("#scriptAuth").attr("href", response);
+                    $("#scriptAuth").show()
                 }
                 else {
-                    $("#resultMessage").text("Something went wrong. Please try again.")
-                    $("#gInstallation").show()
+                    $("#resultMessage").text("Something went wrong. Please try again.");
+                    $("#gInstallation").show();
                 }
             })
         })
-
     })
 </script>
 {{> bottom }}
