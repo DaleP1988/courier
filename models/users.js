@@ -1,4 +1,4 @@
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
     var User = sequelize.define("User", {
         firstName: {
             type: DataTypes.STRING,
@@ -21,6 +21,9 @@ module.exports = function(sequelize, DataTypes) {
                 len: [1]
             }
         },
+        emailReqLink: {
+            type: DataTypes.STRING,
+        },
         img: {
             type: DataTypes.TEXT,
             validate: {
@@ -29,18 +32,17 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
 
-    User.associate = function(models) {
+    User.associate = function (models) {
         User.hasMany(models.Temps, {
             onDelete: "cascade"
         });
     };
 
-    User.associate = function(models) {
+    User.associate = function (models) {
         User.hasMany(models.MailGroup, {
             onDelete: "cascade"
         });
     };
 
     return User;
-  };
-  
+};

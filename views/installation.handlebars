@@ -1,0 +1,71 @@
+{{> navbars }}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+<main>
+    <div class="container" style="margin-top:10%">
+        <a id="gInstallation"><button class="btn">Start Installation</button></a>
+        <div id="codeForm" class="row" style="display:none">
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input placeholder="Enter Authorization Code here" id="codeInput" type="text" class="validate">
+                        <label for="first_name">Authorization Code</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <button id="authSubmit" class="btn">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="preloader-wrapper big active" style="display:none">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h6 id="resultMessage" class="center title"></h6>
+        </div>
+        <div>
+            <a id="scriptAuth" style="display:none"><button class="btn">Authorize Script</button></a>
+        </div>
+    </div>
+</main>
+
+<script>
+    $(function () {
+        $.get("/api/installation/authUrl", function (data) {
+            $("#gInstallation").attr("href", data)
+            $("#gInstallation").attr("target", "_blank")
+        });
+        $("#gInstallation").click(function () {
+            $("#codeForm").show()
+            $("#gInstallation").hide()
+        });
+        $("#authSubmit").click(function () {
+            event.preventDefault()
+            $(".preloader-wrapper").show()
+            $.post("/api/installation/authUrl", { data: $("#codeInput").val().trim(), user: sessionStorage.getItem("courieruser") }, function (response) {
+                $(".preloader-wrapper").hide();
+                if (typeof response === "string") {
+                    $("#resultMessage").text("Installation Successful. Please use the button below to authorize the script and then you can start sending bulk emails!");
+                    $("#scriptAuth").attr("href", response);
+                    $("#scriptAuth").show()
+                }
+                else {
+                    $("#resultMessage").text("Something went wrong. Please try again.");
+                    $("#gInstallation").show();
+                }
+            })
+        })
+    })
+</script>
+{{> bottom }}

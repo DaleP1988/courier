@@ -2,6 +2,8 @@ var db = require("../models")
 
 module.exports = function(app) {
   // Get all examples
+
+
 //   app.get("/api/examples", function(req, res) {
 //     db.Example.findAll({}).then(function(dbExamples) {
 //       res.json(dbExamples)
@@ -53,7 +55,56 @@ module.exports = function(app) {
         })
     })
 
+  // Create Mail Group
+  app.post("/api/mailgroup", function(req, res) {
+    db.MailGroup.create(req.body)
+      .then(function(result) {
+        res.json(result);
+      })
+      .catch(function(err) {
+        res.status(400).json(err);
+      });
+  });
 
+  var oAuth2Client;
+  //GOOGLE SIDE INSTALLATION
+  app.get("/api/installation/authUrl", function(req, res) {
+    require("../googleSetUp/gAuthLink").then(function(result) {
+      var authUrl = result.authUrl;
+      oAuth2Client = result.oAuth2Client;
+      res.send(authUrl);
+    });
+  });
+  app.post("/api/installation/authUrl", function(req, res) {
+    var getTokens = require("../googleSetUp/gAuthToken");
+    getTokens(req.body.data, oAuth2Client).then(function(token) {
+      if (!token.access_token) {
+        res.send("failure");
+      } else {
+        var courierSheetId;
+        oAuth2Client.setCredentials(token);
+        var createSheet = require("../googleSetUp/gAddSheet");
+        createSheet(oAuth2Client).then(function(response) {
+          courierSheetId = response.spreadsheetId;
+          console.log(response);
+          var createScript = require("../googleSetUp/gAddScript");
+          createScript(oAuth2Client, courierSheetId).then(function(response) {
+            console.log(response);
+            var userReqLink = response.reqLink.webApp.url;
+            var userId = JSON.parse(req.body.user).id;
+            db.User.update(
+              { emailReqLink: userReqLink },
+              { where: { id: userId } }
+            ).then(function(result) {
+              oAuth2Client = null;
+              res.send(response.authLink);
+            });
+          });
+        });
+      }
+    });
+  });
+};
     // Create Mail Group
     app.post("/api/mailgroup", function(req, res) {
         db.MailGroup.create(req.body)

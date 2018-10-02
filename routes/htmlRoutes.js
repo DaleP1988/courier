@@ -1,14 +1,20 @@
 // NOTES: need from backend user's name, check if logged in
 var db = require("../models")
 
-module.exports = function(app) {
+module.exports = function (app) {
 
     // load Login page or first page
-    app.get("/", function(req, res) {
+    app.get("/", function (req, res) {
         res.render("index")
     })
 
+    //GOOGLE INSTALLATION
+    app.get("/installation", function (req, res) {
+        res.render("installation")
+    });
+
     // load Login page or all other pages
+
     app.get("/:pages", function(req, res) {
         console.log("hello");
         
@@ -22,7 +28,9 @@ module.exports = function(app) {
     })
 
     // Render 404 page for any unmatched routes
-    app.get("*", function(req, res) {
+    app.get("*", function (req, res) {
         res.render("404")
-    })
-}
+    });
+
+};
+
