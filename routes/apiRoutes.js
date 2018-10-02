@@ -104,7 +104,7 @@ module.exports = function(app) {
       }
     });
   });
-};
+
     // Create Mail Group
     app.post("/api/mailgroup", function(req, res) {
         db.MailGroup.create(req.body)
