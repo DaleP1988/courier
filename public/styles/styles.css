@@ -23,10 +23,6 @@ header, main, footer {
 	padding-left: 300px;
 }
 
-#remove {
-  float: right;
-}
-
 .title {
   font-family: var(--title);
   letter-spacing: 3px;
@@ -313,8 +309,8 @@ nav {
 .card-mail:hover {
   cursor: pointer;
   box-shadow: 5px 5px 20px 0 #888;
-  margin-top: -2px;
-  margin-left: -2px;
+  /* margin-top: -2px;
+  margin-left: -2px; */
 }
 
 .prev-and-form {
@@ -364,6 +360,19 @@ input.edit-email {
   height: 18px !important;
   /* border: 1px solid #9e9e9e !important; */
   display: inline;
+}
+
+/* Preview page */
+/* #user-temp-lable {
+  width: 20%;
+} */
+
+.preview-group-title {
+  font-weight: bold;
+}
+
+#prev-submit-btn {
+
 }
 
 /* ////////////////////////////////////// */
