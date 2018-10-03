@@ -18,14 +18,13 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
 <script>
-    var user = {}
     function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
         var profile = googleUser.getBasicProfile()
         // The ID token you need to pass to your backend:
         var id_token = googleUser.getAuthResponse().id_token
         var id = profile.getId()
-
+        var user = {}
         user.firstName = profile.getGivenName()
         user.lastName = profile.getFamilyName()
         user.googleUser = profile.getEmail()
@@ -34,10 +33,23 @@
         $.get(`/api/user/${user.googleUser}`, function(data) {
             if(data) {
                 user.id = data.id
-                sessionStorage.removeItem('courieruser')
-                sessionStorage.setItem('courieruser', JSON.stringify(user))
-                window.location = window.location.href+"first"
-                
+                $.ajax({
+                    method: "PUT",
+                    url: "/api/users",
+                    data: user
+                }).then(function(result) {
+                    console.log(results)
+                });
+                if (data.emailReqLink) {
+                    user.emailReqLink = data.emailReqLink
+                    sessionStorage.removeItem('courieruser')
+                    sessionStorage.setItem('courieruser', JSON.stringify(user))
+                    window.location = "/first"
+                } else {
+                    sessionStorage.removeItem('courieruser')
+                    sessionStorage.setItem('courieruser', JSON.stringify(user))
+                    window.location = "/installation"
+                }
             } else {
                 $.post("/api/user", user, function(result) {
                     onSignIn(googleUser)

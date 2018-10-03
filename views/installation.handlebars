@@ -2,23 +2,38 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
 
-<main>
-    <div class="container" style="margin-top:10%">
-        <a id="gInstallation"><button class="btn">Start Installation</button></a>
-        <div id="codeForm" class="row" style="display:none">
-            <form class="col s12">
-                <div class="row">
-                    <div class="input-field col s6">
-                        <input placeholder="Enter Authorization Code here" id="codeInput" type="text" class="validate">
-                        <label for="first_name">Authorization Code</label>
-                    </div>
+<main id="installation-area" class="scrollbar scrollbar-primary">
+    <h1 class="title center">Before We Start...</h1>
+    <hr class="title-hr center">
+    <div id="error-link">
+        <h6 class="title">Please wait while we create your link</h6>
+    </div>
+    
+    <div id="instalation-start" style="display:none">
+        <!-- Starting Installation -->
+        <h6 class="title">We will need your permition to send emails from your gmail:</h6>
+        <a id="gInstallation" class="waves-effect waves-light btn insta-start-btn" target="_blank">Start Installation</a>
+    </div>
+
+    <div id="codeForm" class="row" style="display:none">
+        <!-- Entering Auth Code -->
+        <form class="col s12">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input placeholder="Enter Authorization Code here" id="codeInput" type="text" class="validate">
+                    <label for="first_name">Authorization Code</label>
                 </div>
-                <div class="row">
-                    <button id="authSubmit" class="btn">Submit</button>
-                </div>
-            </form>
-        </div>
-        <div class="preloader-wrapper big active" style="display:none">
+            </div>
+            <div class="row">
+                <a id="authSubmit" class="waves-effect waves-light btn insta-start-btn disabled">Submit</a>
+            </div>
+        </form>
+    </div>
+
+    <div id="wait-page" class="center" style="display:none">
+        <!-- Waiting page -->
+        <h6 class="title">Please wait a moment while we prepare everything</h6>
+        <div class="preloader-wrapper big active">
             <div class="spinner-layer spinner-blue-only">
                 <div class="circle-clipper left">
                     <div class="circle"></div>
@@ -31,31 +46,44 @@
                 </div>
             </div>
         </div>
-        <div>
-            <h6 id="resultMessage" class="center title"></h6>
-        </div>
-        <div>
-            <a id="scriptAuth" style="display:none"><button class="btn">Authorize Script</button></a>
-        </div>
     </div>
+
+
+    <h6 id="resultMessage" class="center title"></h6>
+    <a id="scriptAuth" style="display:none" class="waves-effect waves-light btn insta-start-btn" target="_blank">Authorize Script</a>
+    <p class="instalation-helper">For assistance to instalation: <a href="https://drive.google.com/file/d/1_ePweiXevixNp97ZN0uU--905_u50V8G/view" target="_blank">Check Documentation</a></p>
 </main>
 
 <script>
     $(function () {
         $.get("/api/installation/authUrl", function (data) {
             $("#gInstallation").attr("href", data)
-            $("#gInstallation").attr("target", "_blank")
+            $("#error-link").hide()
+            $("#instalation-start").show()
         });
         $("#gInstallation").click(function () {
             $("#codeForm").show()
-            $("#gInstallation").hide()
+            $("#instalation-start").hide()
         });
-        $("#authSubmit").click(function () {
+        $("#codeInput").on("keyup", function () {
+            if($("#codeInput").val().trim().length > 0) {
+                $("#authSubmit").removeClass("disabled")
+            } else {
+                $("#authSubmit").addClass("disabled")
+            }
+        })
+        $("#authSubmit").click(function (event) {
             event.preventDefault()
-            $(".preloader-wrapper").show()
+            $("#codeForm").hide()
+            $("#wait-page").show()
+            var user = JSON.parse(sessionStorage.getItem('courieruser'))
+            console.log(user)
             $.post("/api/installation/authUrl", { data: $("#codeInput").val().trim(), user: sessionStorage.getItem("courieruser") }, function (response) {
-                $(".preloader-wrapper").hide();
+                $("#wait-page").hide();
                 if (typeof response === "string") {
+                    user.emailReqLink = $("#codeInput").val().trim()
+                    sessionStorage.removeItem('courieruser')
+                    sessionStorage.setItem('courieruser', JSON.stringify(user))
                     $("#resultMessage").text("Installation Successful. Please use the button below to authorize the script and then you can start sending bulk emails!");
                     $("#scriptAuth").attr("href", response);
                     $("#scriptAuth").show()
@@ -65,6 +93,10 @@
                     $("#gInstallation").show();
                 }
             })
+        })
+
+        $("#scriptAuth").click(function () {
+            window.location = "/first"
         })
     })
 </script>
