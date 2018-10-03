@@ -15,6 +15,7 @@ if (config.use_env_variable) {
     config.database,
     config.username,
     process.env.MYSQL_DB_PW,
+    
     config
   );
 }
