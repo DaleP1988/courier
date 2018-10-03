@@ -7,7 +7,6 @@
 
 <script src="js/html.js"></script>
 <script>
-    var instance
     document.addEventListener("DOMContentLoaded", function() {
         // sidnav
         var sidnav = document.querySelectorAll(".sidenav")
@@ -28,15 +27,24 @@
 
     $(function() {
         if (sessionStorage.getItem("courieruser") === null) {
-            window.location = "http://localhost:3000/"
+            window.location = "/"
         } else {
             var user = JSON.parse(sessionStorage.getItem('courieruser'))
-                if (user.img !== "") {
-                    $(".circle").attr("src", user.img)
-                }
-                $(".welcome .name").text(user.firstName)
-                $(".user-view .email").text(user.googleUser)
-                $(".user-view .name").text(`${user.firstName} ${user.lastName}`)
+
+            $(".welcome .name").text(user.firstName)
+            $(".user-view .email").text(user.googleUser)
+            $(".user-view .name").text(`${user.firstName} ${user.lastName}`)
+            if (user.img !== "") {
+                $(".circle").attr("src", user.img)
+            }
+
+            if (user.emailReqLink === undefined && window.location.pathname !== "/installation") {
+                window.location = "/installation"
+            }
+        }
+
+        if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') === null) {
+            window.location = "/newtemp"
         }
     })
 </script>

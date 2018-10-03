@@ -1,24 +1,6 @@
 var db = require("../models");
 
-module.exports = function (app) {
-  // Get all examples
-
-  //   app.get("/api/examples", function(req, res) {
-  //     db.Example.findAll({}).then(function(dbExamples) {
-  //       res.json(dbExamples)
-  //     })
-  //   })
-
-  // Get user's mail group and emails
-  // app.get("/api/mailgroup/:userid", function(req, res) {
-  //     var query = {Userid: req.params.userid}
-  //     db.MailGroup.findAll({
-  //         where: query,
-  //         include: [ db.MailList]
-  //     }).then(function(results) {
-  //         res.json(results)
-  //     })
-  // })
+module.exports = function(app) {
 
   // Find User info
   app.get("/api/user/:email", function (req, res) {
@@ -32,24 +14,38 @@ module.exports = function (app) {
       } else {
         res.json(false);
       }
+    })
+    .catch(function(err) {
+      res.status(400).json(err);
     });
   });
 
-  // Find Mail Group and List for user
-  app.get("/api/mailgroup/:user", function (req, res) {
-    var query = { Userid: req.params.user };
-    db.MailGroup.findAll({
-      where: query,
-      include: [db.MailList]
-    }).then(function (results) {
-      res.json(results);
-    });
-  });
 
-  // create Users
-  app.post("/api/user", function (req, res) {
-    db.User.create(req.body).then(function (result) {
+  // Create Users
+  app.post("/api/user", function(req, res) {
+    db.User.create(req.body).then(function(result) {
       res.json(result);
+    })
+    .catch(function(err) {
+      res.status(400).json(err);
+    });
+  });
+
+  // Update Users
+  app.put("/api/users", function(req, res) {
+    db.User.update({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      img: req.body.img
+    }, {
+      where: {
+        googleUser: req.body.googleUser
+      }
+    }).then(function(result) {
+      res.json(result);
+    })
+    .catch(function(err) {
+      res.status(400).json(err);
     });
   });
 
@@ -62,6 +58,108 @@ module.exports = function (app) {
       .catch(function (err) {
         res.status(400).json(err);
       });
+  });
+
+  // Delete from Mail List
+  app.delete("/api/mailgroup/:id", function(req, res) {
+    db.MailGroup.destroy({
+      where: {
+        id: req.params.id
+      }
+    }).then(function(result) {
+      res.json(result);
+    })
+    .catch(function(err) {
+      res.status(400).json(err);
+    });
+  });
+
+    // Update Mail Group
+    app.put("/api/mailgroup", function(req, res) {
+      db.MailGroup.update({
+        lable: req.body.lable
+      }, {
+        where: {
+          id: req.body.id
+        }
+      }).then(function(result) {
+        res.json(result);
+      });
+    });
+
+  // Create Mail List
+  app.post("/api/maillist", function(req, res) {
+    db.MailList.create(req.body)
+      .then(function(result) {
+        res.json(result);
+      })
+       .catch(function(err) {
+        res.status(400).json(err);
+      });
+  });
+
+  // Delete from Mail List
+  app.delete("/api/maillist/:id", function(req, res) {
+    db.MailList.destroy({
+      where: {
+        id: req.params.id
+      }
+    }).then(function(result) {
+      res.json(result);
+    })
+    .catch(function(err) {
+      res.status(400).json(err);
+    });
+  });
+
+  // Update Mail List
+  app.put("/api/maillist", function(req, res) {
+    db.MailList.update({
+      name: req.body.name,
+      email: req.body.email
+    }, {
+      where: {
+        id: req.body.id
+      }
+    }).then(function(result) {
+      res.json(result);
+    });
+  });
+
+  // Create Mail Group
+  // app.post("/api/mailgroup", function(req, res) {
+  //   db.MailGroup.create(req.body)
+  //   .then(function(result) {
+  //       res.json(result)
+  //   }).catch( function (err) {
+  //       res.status(400).json(err)
+  //   })
+  // })
+
+  // Create Mail Group
+  // app.post("/api/mailgroup", function(req, res) {
+  //   db.MailGroup.create(req.body)
+  //     .then(function(result) {
+  //       res.json(result);
+  //     })
+  //     .catch(function(err) {
+  //       res.status(400).json(err);
+  //     });
+  // });
+
+
+  // Find Mail Group and List for user
+  app.get("/api/mailgroup/:user", function(req, res) {
+    var query = { Userid: req.params.user };
+    db.MailGroup.findAll({
+      where: query,
+      include: [db.MailList]
+    }).then(function(results) {
+      res.json(results);
+    })
+    .catch(function(err) {
+      res.status(400).json(err);
+    });
   });
 
   var oAuth2Client;
@@ -139,6 +237,7 @@ module.exports = function (app) {
       }
     });
   });
+
 };
 
 
