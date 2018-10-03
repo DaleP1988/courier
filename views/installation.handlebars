@@ -62,8 +62,10 @@
             $("#instalation-start").show()
         });
         $("#gInstallation").click(function () {
-            $("#codeForm").show()
-            $("#instalation-start").hide()
+            if ($("#gInstallation").attr("href")) {
+                $("#codeForm").show()
+                $("#instalation-start").hide()
+            }
         });
         $("#codeInput").on("keyup", function () {
             if($("#codeInput").val().trim().length > 0) {
