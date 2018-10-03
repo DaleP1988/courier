@@ -16,7 +16,7 @@ if (process.env.HEROKU_DEPLOYED) {
       "token_uri": process.env.TOKEN_URI,
       "auth_provider_x509_cert_url": process.env.AUTH_PROVIDER,
       "client_secret": process.env.CLIENT_SECRET,
-      "redirect_uris": [process.env.REDIRECT_URIS1,process.env.REDIRECT_URIS2]
+      "redirect_uris": [process.env.REDIRECT_URIS1, process.env.REDIRECT_URIS2]
     }
   }
 }
@@ -51,7 +51,7 @@ function run() {
     if (process.env.HEROKU_DEPLOYED) {
       res(getAuthUrl(clientCredentials))
     }
-    else{
+    else {
       fs.readFile('./config/credentials.json', (err, content) => {
         if (err) {
 
