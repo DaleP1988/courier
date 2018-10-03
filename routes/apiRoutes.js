@@ -1,6 +1,6 @@
 var db = require("../models");
 
-module.exports = function(app) {
+module.exports = function (app) {
   // Get all examples
 
   //   app.get("/api/examples", function(req, res) {
@@ -21,12 +21,12 @@ module.exports = function(app) {
   // })
 
   // Find User info
-  app.get("/api/user/:email", function(req, res) {
+  app.get("/api/user/:email", function (req, res) {
     db.User.findOne({
       where: {
         googleUser: req.params.email
       }
-    }).then(function(result) {
+    }).then(function (result) {
       if (result) {
         res.json(result);
       } else {
@@ -36,64 +36,64 @@ module.exports = function(app) {
   });
 
   // Find Mail Group and List for user
-  app.get("/api/mailgroup/:user", function(req, res) {
+  app.get("/api/mailgroup/:user", function (req, res) {
     var query = { Userid: req.params.user };
     db.MailGroup.findAll({
       where: query,
       include: [db.MailList]
-    }).then(function(results) {
+    }).then(function (results) {
       res.json(results);
     });
   });
 
   // create Users
-  app.post("/api/user", function(req, res) {
-    db.User.create(req.body).then(function(result) {
+  app.post("/api/user", function (req, res) {
+    db.User.create(req.body).then(function (result) {
       res.json(result);
     });
   });
 
   // Create Mail Group
-  app.post("/api/mailgroup", function(req, res) {
+  app.post("/api/mailgroup", function (req, res) {
     db.MailGroup.create(req.body)
-      .then(function(result) {
+      .then(function (result) {
         res.json(result);
       })
-      .catch(function(err) {
+      .catch(function (err) {
         res.status(400).json(err);
       });
   });
 
   var oAuth2Client;
   //GOOGLE SIDE INSTALLATION
-  app.get("/api/installation/authUrl", function(req, res) {
-    require("../googleSetUp/gAuthLink").then(function(result) {
+  app.get("/api/installation/authUrl", function (req, res) {
+    require("../googleSetUp/gAuthLink").then(function (result) {
       var authUrl = result.authUrl;
       oAuth2Client = result.oAuth2Client;
       res.send(authUrl);
     });
   });
-  app.post("/api/installation/authUrl", function(req, res) {
+  app.post("/api/installation/authUrl", function (req, res) {
     var getTokens = require("../googleSetUp/gAuthToken");
-    getTokens(req.body.data, oAuth2Client).then(function(token) {
+    getTokens(req.body.data, oAuth2Client).then(function (token) {
       if (!token.access_token) {
         res.send("failure");
       } else {
         var courierSheetId;
         oAuth2Client.setCredentials(token);
         var createSheet = require("../googleSetUp/gAddSheet");
-        createSheet(oAuth2Client).then(function(response) {
+        createSheet(oAuth2Client).then(function (response) {
           courierSheetId = response.spreadsheetId;
           console.log(response);
           var createScript = require("../googleSetUp/gAddScript");
-          createScript(oAuth2Client, courierSheetId).then(function(response) {
+          createScript(oAuth2Client, courierSheetId).then(function (response) {
             console.log(response);
             var userReqLink = response.reqLink.webApp.url;
             var userId = JSON.parse(req.body.user).id;
             db.User.update(
               { emailReqLink: userReqLink },
               { where: { id: userId } }
-            ).then(function(result) {
+            ).then(function (result) {
               oAuth2Client = null;
               res.send(response.authLink);
             });
@@ -104,24 +104,42 @@ module.exports = function(app) {
   });
 
   // Create Mail Group
-  app.post("/api/mailgroup", function(req, res) {
+  app.post("/api/mailgroup", function (req, res) {
     db.MailGroup.create(req.body)
-      .then(function(result) {
+      .then(function (result) {
         res.json(result);
       })
-      .catch(function(err) {
+      .catch(function (err) {
         res.status(400).json(err);
       });
   });
 
   // Create Mail Group
-  app.post("/api/maillist", function(req, res) {
+  app.post("/api/maillist", function (req, res) {
     db.MailList.create(req.body)
-      .then(function(result) {
+      .then(function (result) {
         res.json(result);
       })
-      .catch(function(err) {
+      .catch(function (err) {
         res.status(400).json(err);
       });
   });
+  
+  // Get emailReqLink for user
+  app.get("/api/reqLink/:id", function (req, res) {
+    db.User.findOne({
+      where: {
+        id: req.params.id
+      }
+    }).then(function (result) {
+      if(result){
+        res.send(result.emailReqLink);
+      }else{
+        res.send("No Users Found")
+      }
+    });
+  });
 };
+
+
+

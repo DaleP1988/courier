@@ -47,8 +47,11 @@
             $("#gInstallation").attr("target", "_blank")
         });
         $("#gInstallation").click(function () {
-            $("#codeForm").show()
-            $("#gInstallation").hide()
+            console.log($("#gInstallation").attr("href"))
+            if ($("#gInstallation").attr("href")) {
+                $("#codeForm").show()
+                $("#gInstallation").hide()
+            }
         });
         $("#authSubmit").click(function () {
             event.preventDefault()
