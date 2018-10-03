@@ -162,6 +162,20 @@ module.exports = function(app) {
     });
   });
 
+  // Find New Templat HTML
+  app.get("/api/newtemp/:temp", function (req, res) {
+    db.Newtemps.findOne({
+      where: {
+        lable: req.params.temp
+      }
+    }).then(function (result) {
+      res.json(result);
+    })
+    .catch(function(err) {
+      res.status(400).json(err);
+    });
+  });
+
   var oAuth2Client;
   //GOOGLE SIDE INSTALLATION
   app.get("/api/installation/authUrl", function (req, res) {
@@ -201,27 +215,27 @@ module.exports = function(app) {
     });
   });
 
-  // Create Mail Group
-  app.post("/api/mailgroup", function (req, res) {
-    db.MailGroup.create(req.body)
-      .then(function (result) {
-        res.json(result);
-      })
-      .catch(function (err) {
-        res.status(400).json(err);
-      });
-  });
+  // // Create Mail Group
+  // app.post("/api/mailgroup", function (req, res) {
+  //   db.MailGroup.create(req.body)
+  //     .then(function (result) {
+  //       res.json(result);
+  //     })
+  //     .catch(function (err) {
+  //       res.status(400).json(err);
+  //     });
+  // });
 
-  // Create Mail Group
-  app.post("/api/maillist", function (req, res) {
-    db.MailList.create(req.body)
-      .then(function (result) {
-        res.json(result);
-      })
-      .catch(function (err) {
-        res.status(400).json(err);
-      });
-  });
+  // // Create Mail Group
+  // app.post("/api/maillist", function (req, res) {
+  //   db.MailList.create(req.body)
+  //     .then(function (result) {
+  //       res.json(result);
+  //     })
+  //     .catch(function (err) {
+  //       res.status(400).json(err);
+  //     });
+  // });
   
   // Get emailReqLink for user
   app.get("/api/reqLink/:id", function (req, res) {

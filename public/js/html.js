@@ -266,6 +266,31 @@ $(document).on("click", ".choose-group", function() {
 })
 
 ///////////////////////////////
+//////// Preview Page /////////
+///////////////////////////////
+var createTempPrev = () => {
+    var currTemp = prevData.template
+    var currGroup = prevData.groupid
+    var currgroupLable = prevData.grouplable
+    var currUser = prevData.user
+
+    $(".preview-group-title").text(currgroupLable)
+    $.get(`/api/newtemp/${currTemp}`, function(data) {
+        $("#temp-area-prev").html(data.template)
+        console.log($("#temp-area-prev").html());
+    })
+}
+
+if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') === null) {
+    window.location = "/newtemp"
+} else if (window.location.pathname === "/preview") {
+    createTempPrev()
+
+}
+
+
+
+///////////////////////////////
 /////// USER MAIL LIST ////////
 ///////////////////////////////
 // create the cards
