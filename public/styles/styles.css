@@ -184,7 +184,8 @@ nav {
 #user-mail-list-area,
 #new-templates-area,
 #user-templates-area,
-#preview-area {
+#preview-area,
+#installation-area {
   padding: 10px 60px 10px 360px;
   overflow: auto;
   height: 90%;
@@ -204,7 +205,27 @@ nav {
   margin-top: 100px;
 }
 
+/* Instalation Page */
+#gInstallation,
+#scriptAuth,
+.preloader-wrapper {
+  margin-top: 30px;
+}
+.insta-start-btn {
+  margin-left: 20px;
+}
+
+.instalation-helper {
+  margin-left: 20px;
+  line-height: 40px;
+  font-size: 12px;
+}
+
 /* New Template */
+.temp-card-holder {
+  padding: 0 120px 0 120px;
+}
+
 .modal-temp-title {
   text-transform: capitalize;
 }
@@ -219,7 +240,9 @@ nav {
 }
 
 .card-template:hover,
-.choose-group:hover {
+.choose-group:hover,
+.update-email:hover,
+.clear-email:hover {
   cursor: pointer;
 }
 
@@ -284,6 +307,7 @@ nav {
   overflow:hidden;
   border-right: 10px solid #546e7a;
   border-bottom: 10px solid #546e7a;
+  white-space: nowrap;
 }
 
 .card-mail:hover {
@@ -305,7 +329,41 @@ nav {
 
 .prev-div {
   height: 100%;
+}
 
+.update-email,
+.clear-email,
+.done-email {
+  padding: 0 15px;
+}
+
+#modal-mail,
+#modal-mail .modal-footer {
+  background-color: #ffffff00;
+  border: none;
+  box-shadow: none;
+}
+
+#edit-group-name,
+#delete-group-name,
+#close-group-name,
+#change-group-name {
+  background-color: #fafafa;
+  margin-right: 10px; 
+}
+
+input.edit-name {
+  width: 20% !important;
+  height: 18px !important;
+  /* border: 1px solid #9e9e9e !important; */
+  display: inline;
+}
+
+input.edit-email {
+  width: 40% !important;
+  height: 18px !important;
+  /* border: 1px solid #9e9e9e !important; */
+  display: inline;
 }
 
 /* ////////////////////////////////////// */
@@ -322,7 +380,8 @@ nav {
   #user-mail-list-area,
   #new-templates-area,
   #user-templates-area,
-  #preview-area {
+  #preview-area,
+  #installation-area {
     padding: 10px;
   }
 }

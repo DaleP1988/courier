@@ -4,22 +4,21 @@
     <h2 class="center title">Users Mail List</h2>
     <hr class="title-hr center">
     <div id="user-group-cards" class="row">
-
-    {{#each data}}
-        <div class="col s12 m4 l3">
-            <div class="card blue-grey darken-1 card-mail" value="{{id}}">
-                <div class="card-content white-text">
-                    <span class="card-title card-mail-title">{{lable}}</span>
-                    <p>
-                    {{#each MailLists}}
-                        {{email}}
-                    {{/each}} </p>
-                </div>
-            </div>
-        </div>
-    {{/each}}
     
     </div>
 </main>
+
+<!-- Modal Structure -->
+<div id="modal-mail" class="modal scrollbar scrollbar-primary">
+    <div class="modal-content user-mail-card">
+        <ul class="collection with-header"></ul>
+    </div>
+    <div class="modal-footer center">
+        <a id="edit-group-name" class="waves-effect waves-green btn-flat cyan-text text-darken-4">EDIT</a>
+        <a id="change-group-name" class="waves-effect waves-green btn-flat cyan-text text-darken-4" style="display: none;">CHANGE</a>
+        <a id="delete-group-name" class="modal-close waves-effect waves-green btn-flat red-text text-accent-4">DELETE</a>
+        <a id="close-group-name" class="modal-close waves-effect waves-green btn-flat">CLOSE</a>
+    </div>
+</div>
 
  {{> bottom }}

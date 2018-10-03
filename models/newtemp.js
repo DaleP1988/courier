@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-    var Temps = sequelize.define("Temps", {
+    var Newtemps = sequelize.define("Newtemps", {
         lable: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -16,14 +16,6 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
   
-    Temps.associate = function(models) {
-        Temps.belongsTo(models.User, {
-            foreignKey: {
-                allowNull: false
-            }
-        });
-    };
-  
-    return Temps;
+    return Newtemps;
 };
   
