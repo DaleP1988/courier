@@ -6,6 +6,22 @@ const { google } = require('googleapis');
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/script.projects', 'https://www.googleapis.com/auth/script.deployments', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/script.external_request', 'https://www.googleapis.com/auth/script.send_mail', 'https://www.googleapis.com/auth/spreadsheets'];
 const TOKEN_PATH = 'token.json';
 
+if (process.env.HEROKU_DEPLOYED) {
+  var clientCredentials =
+  {
+    "installed": {
+      "client_id": process.env.CLIENT_ID,
+      "project_id": process.env.PROJECT_ID,
+      "auth_uri": process.env.AUTH_URI,
+      "token_uri": process.env.TOKEN_URI,
+      "auth_provider_x509_cert_url": process.env.AUTH_PROVIDER,
+      "client_secret": process.env.CLIENT_SECRET,
+      "redirect_uris": process.env.REDIRECT_URIS
+    }
+  }
+}
+
+
 //========================================================================================
 //1) GET AUTHORIZATION
 /**
@@ -26,21 +42,26 @@ function getAuthUrl(credentials, callback) {
     scope: SCOPES,
   });
   console.log('Authorize this app by visiting this url:', authUrl);
-  return {authUrl,oAuth2Client};
+  return { authUrl, oAuth2Client };
 
 }
 
 function run() {
   return new Promise((res, rej) => {
-    fs.readFile('./config/credentials.json', (err, content) => {
-      if (err) {
+    if (process.env.HEROKU_DEPLOYED) {
+      res(getAuthUrl(clientCredentials))
+    }
+    else{
+      fs.readFile('./config/credentials.json', (err, content) => {
+        if (err) {
 
-        console.log('Error loading client secret file:', err);
-        rej(err)
-      }
-      // Authorize a client with credentials, then call the Google Sheets API.
-      res(getAuthUrl(JSON.parse(content)));
-    });
+          console.log('Error loading client secret file:', err);
+          rej(err)
+        }
+        // Authorize a client with credentials, then call the Google Sheets API.
+        res(getAuthUrl(JSON.parse(content)));
+      });
+    }
   });
 }
 
