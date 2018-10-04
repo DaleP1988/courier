@@ -320,6 +320,33 @@ $("#user-temp-lable").on("keyup", function() {
 /////// USER TEMPLATE ////////
 ///////////////////////////////
 
+$.get(`/api/idtemp/${user.id}`, function(data) {
+    if(data.length === 0) {
+        $("#user-template-cards").append($("<h6 class='title center'>You currently have no Templates, please go to <a href='/newtemp'>New Mail List</a> to create your template</h6>"))
+        $(".mail-template-choose .collection").append($("<li>").addClass("collection-item").html($("<h6>You currently have no Mail Groups, please go to <a href='/newmail'>New Mail List</a> to create your email groups</h6>")))
+    } else {
+        for(var i = 0; i < data.length; i++) {
+            var groupEmails = data[i].MailLists
+            var stringEmail = ""
+            for(var j = 0; j < groupEmails.length; j++) {
+                stringEmail = stringEmail.concat(`${groupEmails[j].name}: ${groupEmails[j].email}<br>`)
+            }
+
+            // user mail
+            var card = `<div data-target="modal-mail" class="modal-trigger card blue-grey darken-1 card-mail" value="${data[i].id}" data-thisgroup="${data[i].lable}" data-email='${JSON.stringify(groupEmails)}'><div class="card-content white-text"><span class="card-title card-mail-title">${data[i].lable}</span><p id="string-${data[i].id}" data-string="${stringEmail}">${stringEmail}</p></div></div>`
+            $("#user-group-cards").append($("<div>").addClass("col s12 m4").html(card))
+
+            // new template
+            var groupLi = `<div>${data[i].lable}<a class="secondary-content choose-group" value="${data[i].id}" data-lable="${data[i].lable}"><i class="material-icons">send</i></a></div>`
+            $(".mail-group-choose .collection").append($("<li>").addClass("collection-item").html(groupLi))
+        }
+    }
+})
+
+
+
+
+
 
 ///////////////////////////////
 /////// USER MAIL LIST ////////
