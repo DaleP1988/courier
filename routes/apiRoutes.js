@@ -259,6 +259,7 @@ module.exports = function (app) {
           emailInfo: emailInfo
         };
         var url = result.emailReqLink;
+
         var options = {
           method: 'post',
           body: JSON.stringify(postData),
