@@ -11,57 +11,67 @@ const { google } = require('googleapis');
 function callAppsScript(auth, courierSheetId) {
     return new Promise((resolve, reject) => {
         const script = google.script({ version: 'v1', auth });
-        var scriptContent = 'var ssId="' + courierSheetId + '",ss=SpreadsheetApp.openById(ssId),sheet=ss.getSheets()[0];function doPost(e){var t=(e=JSON.parse(e.postData.contents)).mailList,a=e.emailInfo;createMailList(t),sendMails(a)}function createMailList(e){sheet.getRange("A1").setValue("Name"),sheet.getRange("B1").setValue("Email"),sheet.getRange("C1").setValue("Status"),j=0;for(var t=2;t<e.length+2;t++)sheet.getRange("A"+t).setValue(e[j].name),sheet.getRange("B"+t).setValue(e[j].email),j++}function filledCount(){var e=0;t=1;for(var a=sheet.getRange("A"+t);1!=a.isBlank();)t+=1,e+=1,a=sheet.getRange("A"+t);return e}function varString(e,t,a){var s=e;return s=(s=s.replace("###name###",a)).replace("###fname###",t)}function sendMails(e){var t=filledCount();for(i=2;i<t+1;i++){var a=sheet.getRange("A"+i).getValue(),s=a.split(" ")[0],n=sheet.getRange("B"+i).getValue(),l=varString(e.subject,s,a),g=sheet.getRange("D"+i),r=varString(e.body,s,a),o=UrlFetchApp.fetch("https://static.wixstatic.com/media/6c153b_0af2e6af2ebd4068bd9478649dcf63f2~mv2.jpg/v1/fill/w_947,h_183,al_c,q_80,usm_0.66_1.00_0.01/6c153b_0af2e6af2ebd4068bd9478649dcf63f2~mv2.jpg").getBlob().setName("logoBlob");g.isBlank()&&(MailApp.sendEmail({to:n,subject:l,htmlBody:r,name:e.alias,inlineImages:{logo:o}}),sheet.getRange("C"+i).setValue("Mail Sent"))}}'
-        script.projects.create({
-            resource: {
-                title: 'Courier Script',
-                parentId: courierSheetId
-            },
-        }, (err, res) => {
+        var scriptInit = 'var ssId="' + courierSheetId + '";'
+        fs.readFile('./googleSetUp/courierScript.js', (err, content) => {
             if (err) {
-                reject(err);
-                console.log(`The API create method returned an error: ${err}`);
+                console.log(err)
+                return err
             }
-            script.projects.updateContent({
-                scriptId: res.data.scriptId,
-                auth,
+            console.log(err)
+            console.log(content)
+            var scriptContent = scriptInit + content
+
+            script.projects.create({
                 resource: {
-                    files: [{
-                        name: 'courier',
-                        type: 'SERVER_JS',
-                        source: scriptContent,
-                    }, {
-                        name: 'appsscript',
-                        type: 'JSON',
-                        source: '{"timeZone": "America/New_York", "dependencies": {},"webapp": {"access": "ANYONE_ANONYMOUS","executeAs": "USER_DEPLOYING"},"exceptionLogging": "STACKDRIVER","executionApi": {"access": "ANYONE"}}'
-                    }
-                    ],
+                    title: 'Courier Script',
+                    parentId: courierSheetId
                 },
             }, (err, res) => {
                 if (err) {
                     reject(err);
-                    console.log(`The API updateContent method returned an error: ${err}`);
+                    console.log(`The API create method returned an error: ${err}`);
                 }
-                script.projects.versions.create({
+                script.projects.updateContent({
                     scriptId: res.data.scriptId,
-                    versionNumber: 1,
-                    description: "courier deployment",
-                    createTime: new Date()
-                }, (err, res) => {
-                    var thisScriptId = res.data.scriptId
-                    script.projects.deployments.create({
-                        scriptId: thisScriptId,
-                        versionNumber: 1,
-                        manifestFileName: "appsscript",
-                        description: "courier deployment"
-                    }, (err, res) => {
-                        if (err) {
-                            reject(err)
-                            console.log(`The API deployments.create method returned an error: ${err}`)
+                    auth,
+                    resource: {
+                        files: [{
+                            name: 'courier',
+                            type: 'SERVER_JS',
+                            source: scriptContent,
+                        }, {
+                            name: 'appsscript',
+                            type: 'JSON',
+                            source: '{"timeZone": "America/New_York", "dependencies": {},"webapp": {"access": "ANYONE_ANONYMOUS","executeAs": "USER_DEPLOYING"},"exceptionLogging": "STACKDRIVER","executionApi": {"access": "ANYONE"}}'
                         }
-                        resolve({ reqLink: res.data.entryPoints[0], authLink: `https://script.google.com/d/${thisScriptId}/edit` })
+                        ],
+                    },
+                }, (err, res) => {
+                    if (err) {
+                        reject(err);
+                        console.log(`The API updateContent method returned an error: ${err}`);
+                    }
+                    script.projects.versions.create({
+                        scriptId: res.data.scriptId,
+                        versionNumber: 1,
+                        description: "courier deployment",
+                        createTime: new Date()
+                    }, (err, res) => {
+                        var thisScriptId = res.data.scriptId
+                        script.projects.deployments.create({
+                            scriptId: thisScriptId,
+                            versionNumber: 1,
+                            manifestFileName: "appsscript",
+                            description: "courier deployment"
+                        }, (err, res) => {
+                            if (err) {
+                                reject(err)
+                                console.log(`The API deployments.create method returned an error: ${err}`)
+                            }
+                            resolve({ reqLink: res.data.entryPoints[0], authLink: `https://script.google.com/d/${thisScriptId}/edit` })
+                        })
                     })
-                })
+                });
             });
         });
     });
