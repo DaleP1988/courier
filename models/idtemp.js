@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-    var Newtemps = sequelize.define("Newtemps", {
+    var Idtemps = sequelize.define("Idtemps", {
         lable: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -16,5 +16,5 @@ module.exports = function(sequelize, DataTypes) {
         }
     });
   
-    return Newtemps;
+    return Idtemps;
 };
