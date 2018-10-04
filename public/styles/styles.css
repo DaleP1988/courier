@@ -181,7 +181,8 @@ nav {
 #new-templates-area,
 #user-templates-area,
 #preview-area,
-#installation-area {
+#installation-area,
+#sending-area {
   padding: 10px 60px 10px 360px;
   overflow: auto;
   height: 90%;
@@ -309,8 +310,6 @@ nav {
 .card-mail:hover {
   cursor: pointer;
   box-shadow: 5px 5px 20px 0 #888;
-  /* margin-top: -2px;
-  margin-left: -2px; */
 }
 
 .prev-and-form {
@@ -382,7 +381,8 @@ input.edit-email {
   #new-templates-area,
   #user-templates-area,
   #preview-area,
-  #installation-area {
+  #installation-area,
+  #sending-area {
     padding: 10px;
   }
 }

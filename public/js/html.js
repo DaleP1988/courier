@@ -1,18 +1,19 @@
-$(function () {
-    // VARIABLES
-    var user = JSON.parse(sessionStorage.getItem('courieruser'))
-    var prevData = JSON.parse(sessionStorage.getItem('courierchosen'))
-    var emailArr = [] // needed for importing emails to mailLists table
-    var manualRowCount = 1 // needed for create new manual rows
 
-    // reset user when logoff
-    $(".logoff").on("click", function () {
-        sessionStorage.removeItem('courieruser')
-        sessionStorage.removeItem('courierchosen')
-        var auth2 = gapi.auth2.getAuthInstance()
-        auth2.signOut().then(function () {
-            console.log('User signed out.')
-        })
+$(function() {
+// VARIABLES
+var user = JSON.parse(sessionStorage.getItem('courieruser'))
+var prevData = JSON.parse(sessionStorage.getItem('courierchosen'))
+var emailArr = [] // needed for importing emails to mailLists table
+var manualRowCount = 1 // needed for create new manual rows
+
+// reset user when logoff
+$(".logoff").on("click", function() {
+    sessionStorage.removeItem('courieruser')
+    sessionStorage.removeItem('courierchosen')
+    sessionStorage.removeItem('couriersignin')
+    var auth2 = gapi.auth2.getAuthInstance()
+    auth2.signOut().then(function () {
+      console.log('User signed out.')
     })
 
     ///////////////////////////////

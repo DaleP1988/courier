@@ -15,9 +15,7 @@
     function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
         var profile = googleUser.getBasicProfile()
-        // The ID token you need to pass to your backend:
-        var id_token = googleUser.getAuthResponse().id_token
-        var id = profile.getId()
+        //var id = profile.getId()
         var user = {}
         user.firstName = profile.getGivenName()
         user.lastName = profile.getFamilyName()
@@ -35,10 +33,12 @@
                     console.log(results)
                 });
                 if (data.emailReqLink) {
-                    user.emailReqLink = data.emailReqLink
-                    sessionStorage.removeItem('courieruser')
-                    sessionStorage.setItem('courieruser', JSON.stringify(user))
-                    window.location = "/first"
+                    if (sessionStorage.getItem("couriersignin") !== null) {
+                        user.emailReqLink = data.emailReqLink
+                        sessionStorage.removeItem('courieruser')
+                        sessionStorage.setItem('courieruser', JSON.stringify(user))
+                        window.location = "/first"
+                    }
                 } else {
                     sessionStorage.removeItem('courieruser')
                     sessionStorage.setItem('courieruser', JSON.stringify(user))
@@ -50,8 +50,12 @@
                 })
             }
         })
-
     }
+
+    $(document).on("click", ".abcRioButton", function() {
+        sessionStorage.setItem('couriersignin', true)
+        onSignIn(googleUser)
+    })
 </script>
 
 <script src="js/html.js"></script>
