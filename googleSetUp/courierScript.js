@@ -1,4 +1,3 @@
-var ssId = "155Jx53hEuv9V98fmxu1yQYWIrw4ShwwRiTm7wyspurM"
 var ss = SpreadsheetApp.openById(ssId);
 var sheet = ss.getSheets()[0];
 
@@ -49,7 +48,6 @@ function sendMails(emailInfo) {
 
     //sends mail to each new user
 
-
     for (i = 2; i < count + 1; i++) {
         var name = sheet.getRange("A" + i).getValue();
         var firstname = name.split(' ')[0];
@@ -57,11 +55,6 @@ function sendMails(emailInfo) {
         var subject = varString(emailInfo.subject, firstname, name);
         var status = sheet.getRange("D" + i);
         var body = varString(emailInfo.body, firstname, name);
-        var logoURL = "https://static.wixstatic.com/media/6c153b_0af2e6af2ebd4068bd9478649dcf63f2~mv2.jpg/v1/fill/w_947,h_183,al_c,q_80,usm_0.66_1.00_0.01/6c153b_0af2e6af2ebd4068bd9478649dcf63f2~mv2.jpg"
-        var logoBlob = UrlFetchApp
-            .fetch(logoURL)
-            .getBlob()
-            .setName("logoBlob");
 
         if (status.isBlank()) {
 
