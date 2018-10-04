@@ -258,7 +258,7 @@ module.exports = function (app) {
           mailList: mailList,
           emailInfo: emailInfo
         };
-        var url = "https://script.google.com/macros/s/AKfycbxwcvgHAzVFl_Uzx0N8saGU5BxcoI-XGf2glETvYWKwGMO-TBc/exec";
+        var url = result.emailReqLink;
         var options = {
           method: 'post',
           body: JSON.stringify(postData),
