@@ -325,58 +325,94 @@ $("#user-temp-lable").on("keyup", function() {
 ///////////////////////////////
 /////// USER MAIL LIST ////////
 ///////////////////////////////
-// create the cards
-$.get(`/api/mailgroup/${user.id}`, function(data) {
-    if(data.length === 0) {
-        $("#user-group-cards").append($("<h6 class='title center'>You currently have no Mail Groups, please go to <a href='/newmail'>New Mail List</a> to create your email groups</h6>"))
-        $(".mail-group-choose .collection").append($("<li>").addClass("collection-item").html($("<h6>You currently have no Mail Groups, please go to <a href='/newmail'>New Mail List</a> to create your email groups</h6>")))
+var mailArr
+
+// Page reload get all of user's mailgroups and maillists
+var maillistByUser = (cb) => {
+    $.get(`/api/mailgroup/${user.id}`, function(data) {
+        mailArr = data
+        cb()
+    })
+}
+
+// create cards with info in mailArr (need maillistByUser to be called first)
+var inputAllCards = () => {
+    if ($.isEmptyObject(mailArr)) {
+        $("#user-group-cards").html($("<h6 class='title center'>You currently have no Mail Groups, please go to <a href='/newmail'>New Mail List</a> to create your email groups</h6>"))
     } else {
-        for(var i = 0; i < data.length; i++) {
-            var groupEmails = data[i].MailLists
-            var stringEmail = ""
-            for(var j = 0; j < groupEmails.length; j++) {
-                stringEmail = stringEmail.concat(`${groupEmails[j].name}: ${groupEmails[j].email}<br>`)
-            }
-
-            // user mail
-            var card = `<div data-target="modal-mail" class="modal-trigger card blue-grey darken-1 card-mail" value="${data[i].id}" data-thisgroup="${data[i].lable}" data-email='${JSON.stringify(groupEmails)}'><div class="card-content white-text"><span class="card-title card-mail-title">${data[i].lable}</span><p id="string-${data[i].id}" data-string="${stringEmail}">${stringEmail}</p></div></div>`
+        $("#user-group-cards").empty()
+        for (var g = 0; g < mailArr.length; g++) {
+            var card = createMailistCard(g)
             $("#user-group-cards").append($("<div>").addClass("col s12 m4").html(card))
+        }
+        
+    }
+}
 
-            // new template
-            var groupLi = `<div>${data[i].lable}<a class="secondary-content choose-group" value="${data[i].id}" data-lable="${data[i].lable}"><i class="material-icons">send</i></a></div>`
-            $(".mail-group-choose .collection").append($("<li>").addClass("collection-item").html(groupLi))
+// Function to create the card by location in array
+var createMailistCard = (i) => {
+    var groupEmailArr = mailArr[i].MailLists
+
+    var stringEmail = ""
+    for(var y = 0; y < groupEmailArr.length; y++) {
+        stringEmail = stringEmail.concat(`${groupEmailArr[y].name}: ${groupEmailArr[y].email}<br>`)
+    }
+
+    var card = `<div data-target="modal-mail" class="modal-trigger card blue-grey darken-1 card-mail" value="${mailArr[i].id}" data-thisgroup="${mailArr[i].lable}"><div class="card-content white-text"><span class="card-title card-mail-title">${mailArr[i].lable}</span><p id="string-${mailArr[i].id}">${stringEmail}</p></div></div>`
+    return card
+}
+
+// on uswe window will get mail by user and load cards
+if (window.location.pathname === "/usermail") {
+    maillistByUser(inputAllCards)
+}
+
+// find location were groupid = paramid
+var arrPlaceById = (id) => {
+    var place
+    for (var z = 0; z < mailArr.length; z++) {
+        if(mailArr[z].id === id) {
+            place = z
         }
     }
-})
+    return place
+}
+
+// create model Li with Mailarr by groupid
+var createModelEmailEdit = (groupPlace, mailPlace) => {
+    var mailList = mailArr[groupPlace].MailLists[mailPlace]
+    
+    var perEmail = `<div data-groupid="${mailArr[groupPlace].id}"><span id="this-span-name-${mailList.id}">${mailList.name}</span><input type='text' class='edit-name' style='display: none;'> : <span id="this-span-email-${mailList.id}">${mailList.email}</span><input type='text' class='edit-email' style='display: none;'> <a class="secondary-content clear-email" value="${mailList.id}"><i class="material-icons red-text">clear</i></a> <a class="secondary-content done-email" value="${mailList.id}" style="display:none;"><i class="material-icons">check</i></a> <a class="secondary-content update-email" value="${mailList.id}"><i class="material-icons">border_color</i></a></div>`
+    var emailLi = $(`<li id="email-${mailList.id}">`).addClass("collection-item").html(perEmail)
+
+    return emailLi
+}
 
 // open email list edit module
 $(document).on("click", ".card-mail", function() {
-    var dataEmail = JSON.parse($(this).attr("data-email"))
     var groupName = $(this).attr("data-thisgroup")
     var groupId = $(this).attr("value")
+    var arrPlace = arrPlaceById(parseInt(groupId))
+    var mailListArr = mailArr[arrPlace].MailLists
+
     $("#modal-mail").attr("value", groupId)
     $(".user-mail-card").html($('<ul class="collection with-header">').append(`<li class="collection-header"><h4 id="group-name-h4">${groupName}</h4><input type='text' class='edit-group-input' style='display: none;'></li>`))
-    dataEmail.forEach(function(i) {
-        var perEmail = `<div data-obj="${i.name}: ${i.email}<br>" data-groupid="${groupId}"><span id="this-span-name-${i.id}">${i.name}</span><input type='text' class='edit-name' style='display: none;'> : <span id="this-span-email-${i.id}">${i.email}</span><input type='text' class='edit-email' style='display: none;'> <a class="secondary-content clear-email" value="${i.id}"><i class="material-icons red-text">clear</i></a> <a class="secondary-content done-email" value="${i.id}" style="display:none;"><i class="material-icons">check</i></a> <a class="secondary-content update-email" value="${i.id}"><i class="material-icons">border_color</i></a></div>`
-        $(".user-mail-card .collection").append($(`<li id="email-${i.id}">`).addClass("collection-item").html(perEmail))
-    })
+    for(var t = 0; t < mailListArr.length; t++) {
+        var perEmail = createModelEmailEdit(arrPlace, t)
+        $(".user-mail-card .collection").append(perEmail)
+    }
 })
 
 // delete email from group
 $(document).on("click", ".clear-email", function() {
-    var groupId = $(this).parent().attr("data-groupid")
     var emailId = $(this).attr("value")
-    var originalString = $(`#string-${groupId}`).attr("data-string")
-    var removeString = $(this).parent().attr("data-obj")
-    var newString = originalString.replace(removeString, '')
-    
+
     $.ajax({
         method: "DELETE",
         url: "/api/maillist/" + emailId
     }).then(function(results) {
-        $(`#string-${groupId}`).html(newString)
-        $(`#string-${groupId}`).attr("data-string", `${JSON.stringify(newString)}`)
         $(`#email-${emailId}`).remove()
+        maillistByUser(inputAllCards)
     });
     
 })
@@ -408,27 +444,13 @@ $(document).on("click", ".done-email", function() {
     var editName = $(`#email-${emailId} div .edit-name`).val().trim()
     var editEmail = $(`#email-${emailId} div .edit-email`).val().trim()
 
-    var originalString = $(`#string-${groupId}`).attr("data-string")
-    var editDataObj =  `${editName}: ${editEmail}<br>`
-    var originalDataObj = $(this).parent().attr("data-obj")
-    var newString = originalString.replace(originalDataObj, editDataObj)
-    var dataEmail = JSON.parse($(`#string-${groupId}`).parent().parent().attr("data-email"))
-    
-    dataEmail.forEach(function(i) {
-        if (i.id === parseInt(emailId)) {
-            i.name = editName
-            i.email = editEmail
-        }
-    })
-    dataEmail = JSON.stringify(dataEmail)
-    
-
-    // update database
+    // // update database
     $.ajax({
         method: "PUT",
         url: "/api/maillist",
         data: {id: emailId, name: editName, email: editEmail}
-      }).then(function(result) {
+    }).then(function(result) {
+        // edit li
         $(`#this-span-name-${emailId}`).text(editName)
         $(`#this-span-email-${emailId}`).text(editEmail)
 
@@ -442,24 +464,20 @@ $(document).on("click", ".done-email", function() {
         $(`#email-${emailId} div .edit-name`).hide()
         $(`#email-${emailId} div .edit-email`).hide()
 
-        // edit data-types
-        $(`#string-${groupId}`).attr("data-string", JSON.stringify(newString))
-        $(`#string-${groupId}`).html(newString)
-        $(this).parent().attr("data-obj", editDataObj)
-        $(`#string-${groupId}`).parent().parent().attr("data-email", dataEmail)
-      });
+        // update cards
+        maillistByUser(inputAllCards)
+    });
 })
 
 // delete group
 $("#delete-group-name").on("click", function() {
     var groupId = $(this).parent().parent().attr("value")
-    var cardDelete = $(`#string-${groupId}`).parent().parent().parent()
 
     $.ajax({
         method: "DELETE",
         url: "/api/mailgroup/" + groupId
     }).then(function(results) {
-        cardDelete.remove()
+        maillistByUser(inputAllCards)
     });
     
 })
@@ -469,9 +487,10 @@ $("#edit-group-name").on("click", function() {
     var currentVal = $(`#group-name-h4`).text()
     $(`.edit-group-input`).val(currentVal)
     
-    // show hide all
+    // show hide buttons and spans
     $(`#group-name-h4`).hide()
     $(`.edit-group-input`).show()
+    $(`.edit-group-input`).focus()
     $("#edit-group-name").hide()
     $("#change-group-name").show()
 })
@@ -489,15 +508,15 @@ $("#change-group-name").on("click", function() {
     }).then(function(result) {
         // change txt
         $(`#group-name-h4`).text(newVal)
-        $(`#string-${groupId}`).siblings().text(newVal)
 
         // show hide all
         $(`#group-name-h4`).show()
         $(`.edit-group-input`).hide()
         $("#edit-group-name").show()
         $("#change-group-name").hide()
+
+        maillistByUser(inputAllCards)
     });
-    
 })
 
 })
