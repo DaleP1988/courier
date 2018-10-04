@@ -60,7 +60,7 @@ module.exports = function(app) {
       });
   });
 
-  // Delete from Mail List
+  // Delete from Mail Group
   app.delete("/api/mailgroup/:id", function(req, res) {
     db.MailGroup.destroy({
       where: {
@@ -125,28 +125,6 @@ module.exports = function(app) {
       res.json(result);
     });
   });
-
-  // Create Mail Group
-  // app.post("/api/mailgroup", function(req, res) {
-  //   db.MailGroup.create(req.body)
-  //   .then(function(result) {
-  //       res.json(result)
-  //   }).catch( function (err) {
-  //       res.status(400).json(err)
-  //   })
-  // })
-
-  // Create Mail Group
-  // app.post("/api/mailgroup", function(req, res) {
-  //   db.MailGroup.create(req.body)
-  //     .then(function(result) {
-  //       res.json(result);
-  //     })
-  //     .catch(function(err) {
-  //       res.status(400).json(err);
-  //     });
-  // });
-
 
   // Find Mail Group and List for user
   app.get("/api/mailgroup/:user", function(req, res) {
@@ -214,28 +192,6 @@ module.exports = function(app) {
       }
     });
   });
-
-  // // Create Mail Group
-  // app.post("/api/mailgroup", function (req, res) {
-  //   db.MailGroup.create(req.body)
-  //     .then(function (result) {
-  //       res.json(result);
-  //     })
-  //     .catch(function (err) {
-  //       res.status(400).json(err);
-  //     });
-  // });
-
-  // // Create Mail Group
-  // app.post("/api/maillist", function (req, res) {
-  //   db.MailList.create(req.body)
-  //     .then(function (result) {
-  //       res.json(result);
-  //     })
-  //     .catch(function (err) {
-  //       res.status(400).json(err);
-  //     });
-  // });
   
   // Get emailReqLink for user
   app.get("/api/reqLink/:id", function (req, res) {
