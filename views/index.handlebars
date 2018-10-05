@@ -20,7 +20,7 @@
         user.firstName = profile.getGivenName()
         user.lastName = profile.getFamilyName()
         user.googleUser = profile.getEmail()
-        user.img = profile.getImageUrl()
+        //user.img = profile.getImageUrl()
 
         $.get(`/api/user/${user.googleUser}`, function(data) {
             if(data) {
@@ -30,20 +30,23 @@
                     url: "/api/users",
                     data: user
                 }).then(function(result) {
-                    console.log(results)
-                });
-                if (data.emailReqLink) {
-                    if (sessionStorage.getItem("couriersignin") !== null) {
-                        user.emailReqLink = data.emailReqLink
+                    console.log(result)
+                    if (data.emailReqLink) {
+                        if (sessionStorage.getItem("couriersignin") !== null) {
+                            user.img = profile.getImageUrl()
+                            user.emailReqLink = data.emailReqLink
+                            sessionStorage.removeItem('courieruser')
+                            sessionStorage.setItem('courieruser', JSON.stringify(user))
+                            window.location = "/first"
+                        }
+                    } else {
+                        user.img = profile.getImageUrl()
                         sessionStorage.removeItem('courieruser')
                         sessionStorage.setItem('courieruser', JSON.stringify(user))
-                        window.location = "/first"
+                        window.location = "/installation"
                     }
-                } else {
-                    sessionStorage.removeItem('courieruser')
-                    sessionStorage.setItem('courieruser', JSON.stringify(user))
-                    window.location = "/installation"
-                }
+                });
+
             } else {
                 $.post("/api/user", user, function(result) {
                     onSignIn(googleUser)

@@ -37,7 +37,22 @@ module.exports = function(app) {
   app.put("/api/users", function(req, res) {
     db.User.update({
       firstName: req.body.firstName,
-      lastName: req.body.lastName,
+      lastName: req.body.lastName
+    }, {
+      where: {
+        googleUser: req.body.googleUser
+      }
+    }).then(function(result) {
+      res.json(result);
+    })
+    .catch(function(err) {
+      res.status(400).json(err);
+    });
+  });
+
+  // Update Users
+  app.put("/api/img", function(req, res) {
+    db.User.update({
       img: req.body.img
     }, {
       where: {

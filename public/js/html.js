@@ -20,22 +20,20 @@ $(".logoff").on("click", function() {
 /////////// SETTINGS //////////
 ///////////////////////////////
 
-// change settings
+// change backgroud pic on side-nav
 $("#change-settings").on("click", function(event) {
     event.preventDefault()
-
-    // change profile image
-    var changeImg = $("#img-changer").val().trim()
     var changebg = $("#bg-changer").val().trim()
-    if (changeImg !== null && isUrlImage(changeImg)) {
-        $(".circle").attr("src", changeImg)
-    } else if (changebg !== null && isUrlImage(changebg)){
+    console.log(changebg);
+    
+    $.ajax({
+        method: "PUT",
+        url: "/api/img",
+        data: {img: changebg, googleUser: user.googleUser}
+    }).then(function(result) {
         $(".sidenav-background").attr("src", changebg)
-    }
-
-    // Clear all
-    $("#img-changer").val("")
-    $("#bg-changer").val("")
+        $("#bg-changer").val("")
+    });
 })
 
 // check if its link is an img
