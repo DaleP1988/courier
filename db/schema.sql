@@ -1,3 +1,3 @@
-DROP DATABASE IF EXISTS courierdb;
+DROP DATABASE courierdb;
 CREATE DATABASE courierdb;
 

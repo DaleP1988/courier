@@ -286,5 +286,22 @@ module.exports = function (app) {
 
 };
 
+//Update the database with the filled Templates
+
+app.post("/api/sendTemplate", function(req, res) {
+ 
+  db.idtemps.update({   
+    template: req.body.template
+  }, {
+    where: {
+      lable: req.body.lable
+    }
+  }).then(function(result) {
+    res.json(result);
+  })
+  .catch(function(err) {
+    res.status(400).json(err);
+  });
+});
 
 
