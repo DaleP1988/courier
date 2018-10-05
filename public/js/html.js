@@ -19,6 +19,12 @@ $(".logoff").on("click", function() {
 ///////////////////////////////
 /////////// SETTINGS //////////
 ///////////////////////////////
+$.get(`/api/user/${user.googleUser}`, function(data) {
+    if (data.img !== null) {
+        $(".sidenav-background").attr("src", data.img)
+    }
+})
+
 
 // change backgroud pic on side-nav
 $("#change-settings").on("click", function(event) {
