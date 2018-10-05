@@ -6,7 +6,9 @@ const { google } = require('googleapis');
  * Creates a new script project, upload a file, and log the script's URL.
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-
+function minify(text){
+    return text.replace(/\s\s+/g,"");
+}
 
 function callAppsScript(auth, courierSheetId) {
     return new Promise((resolve, reject) => {
@@ -19,7 +21,7 @@ function callAppsScript(auth, courierSheetId) {
             }
             console.log(err)
             console.log(content)
-            var scriptContent = scriptInit + content
+            var scriptContent = minify(scriptInit + content)
 
             script.projects.create({
                 resource: {

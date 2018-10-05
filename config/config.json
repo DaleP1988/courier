@@ -1,14 +1,14 @@
 {
   "development": {
     "username": "root",
-    "password": "Caryophyllus1415%&#",
+    "password": "",
     "database": "courierdb",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": "Caryophyllus1415%&#",
+    "password": "",
     "database": "courierdb",
     "host": "localhost",
     "dialect": "mysql",
