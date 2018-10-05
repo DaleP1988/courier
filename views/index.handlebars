@@ -17,6 +17,7 @@
         var profile = googleUser.getBasicProfile()
         //var id = profile.getId()
         var user = {}
+        var other
         user.firstName = profile.getGivenName()
         user.lastName = profile.getFamilyName()
         user.googleUser = profile.getEmail()
@@ -33,16 +34,18 @@
                     console.log(result)
                     if (data.emailReqLink) {
                         if (sessionStorage.getItem("couriersignin") !== null) {
-                            user.img = profile.getImageUrl()
-                            user.emailReqLink = data.emailReqLink
+                            other = user
+                            other.img = profile.getImageUrl()
+                            other.emailReqLink = data.emailReqLink
                             sessionStorage.removeItem('courieruser')
-                            sessionStorage.setItem('courieruser', JSON.stringify(user))
+                            sessionStorage.setItem('courieruser', JSON.stringify(other))
                             window.location = "/first"
                         }
                     } else {
-                        user.img = profile.getImageUrl()
+                        other = user
+                        other.img = profile.getImageUrl()
                         sessionStorage.removeItem('courieruser')
-                        sessionStorage.setItem('courieruser', JSON.stringify(user))
+                        sessionStorage.setItem('courieruser', JSON.stringify(other))
                         window.location = "/installation"
                     }
                 });

@@ -50,7 +50,7 @@ module.exports = function(app) {
     });
   });
 
-  // Update Users
+  // Update Img
   app.put("/api/img", function(req, res) {
     db.User.update({
       img: req.body.img
