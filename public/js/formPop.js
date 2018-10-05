@@ -1,23 +1,17 @@
-
 // make sure to add a button
-
 
 $("#prev-submit-btn").on("click", function(event){
     console.log("form submitted!")
-event.preventDefault();
-goLogo();
-goMainImg();
-goName();
-goPosition();
-goTelephone();
-goEmail();
-postHTML();
-clear();
-// window.location.href = "output.html"
-
+    event.preventDefault();
+    goLogo();
+    goMainImg();
+    goName();
+    goPosition();
+    goTelephone();
+    goEmail();
+    postHTML();
+    clear();
 });
-
-
 
 function goLogo(){
     var Logo = $("#logo-input").val().trim(); 
@@ -61,15 +55,8 @@ function goTelephone(){
     if(Telephone !== ""){
         var tempPhone = $(".telephone");
         tempPhone.html("<h4>" + Telephone + "<h4>");
-    
     } 
 }
-
-
-//making strings of each digit and rebuilding ...substrings
-//database req 10
-//
-
 
 function goEmail(){
     var Email = $("#email-input").val().trim();
@@ -81,50 +68,22 @@ function goEmail(){
     } 
 }
 
-function postHTML(){
-var getHTML = $("#temp-area-prev").html();
-   //this eliminates the spaces  jquery reg ex replace space from string
-console.log(minify(getHTML));
-var minHTML = minify(getHTML);
-var params = {
-    lable: "Default-Green",
-    template: minHTML
+function postHTML(lable, minHTML){
+    var getHTML = $("#temp-area-prev").html();
+    getHTML = getHTML.replace(/\s\s+/g,"")
+    console.log(getHTML);
+    return getHTML 
 }
-$.post("/api/sendTemplate", params, function(){   //sends to the api/sendTemplate in api routes 
-    alert("sent email");                            //this is in client
-});                                                 //send this somewhere, locally
-                                                    //server is going to see if it has code to complete 
-}
-
-function minify(text){
-    return text.replace(/\s\s+/g,"");
-
-}
-
-//html method replaces rather than adds on
-//empty string means nothing between the quotes
-
 
 //clear form fields
 
 function clear(){
-
     $("#logo-input").val("");
     $("#main-image").val("");
     $("#name-input").val("");
     $("#position-input").val("");
     $("#telephone").val("");
     $("#email-input").val("");   
-
-
 }
 
-
-
-
 clear();
-
-
-
-
-// when declaring not calling, no semi-colon...

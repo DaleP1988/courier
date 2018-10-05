@@ -8,6 +8,13 @@ module.exports = function(sequelize, DataTypes) {
             }
         },
         template: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                len: [1]
+            }
+        },
+        body: {
             type: DataTypes.TEXT,
             allowNull: false,
             validate: {
