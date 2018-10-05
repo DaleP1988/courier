@@ -65,14 +65,8 @@ function sendMails(emailInfo) {
                 htmlBody: body,
                 //attachments: [file.next()],
                 name: emailInfo.alias,
-                inlineImages: {
-                    logo: logoBlob
-                }
             });
-
             sheet.getRange("C" + i).setValue("Mail Sent")
-
         }
-
     }
 }
