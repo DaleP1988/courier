@@ -332,8 +332,13 @@ nav {
 
 .update-email,
 .clear-email,
-.done-email {
+.done-email,
+.done-new-email {
   padding: 0 15px;
+}
+
+.done-new-email {
+  color: #26a69a;
 }
 
 #modal-mail,
@@ -351,14 +356,16 @@ nav {
   margin-right: 10px; 
 }
 
-input.edit-name {
+input.edit-name,
+input.new-name {
   width: 20% !important;
   height: 18px !important;
   /* border: 1px solid #9e9e9e !important; */
   display: inline;
 }
 
-input.edit-email {
+input.edit-email,
+input.new-email {
   width: 40% !important;
   height: 18px !important;
   /* border: 1px solid #9e9e9e !important; */

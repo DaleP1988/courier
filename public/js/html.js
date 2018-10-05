@@ -53,6 +53,88 @@ var isUrlImage = (url) => {
     }
 }
 
+///////////////////////////////
+//////// NEW TEMPLATES ////////
+///////////////////////////////
+var mailArr
+
+// Page reload get all of user's mailgroups and maillists
+var maillistByUser = (cb) => {
+    $.get(`/api/mailgroup/${user.id}`, function(data) {
+        mailArr = data
+        cb()
+    })
+}
+
+// creat the lis after chosing the templates
+var createNewTempLi = () => {
+    if ($.isEmptyObject(mailArr)) {
+        $(".mail-group-choose .collection").html($("<li>").addClass("collection-item").html($("<h6>You currently have no Mail Groups, please go to <a href='/newmail'>New Mail List</a> to create your email groups</h6>")))
+    } else {
+        for (var w = 0; w < mailArr.length; w++) {
+            var groupId = mailArr[w].id
+            var groupLable = mailArr[w].lable
+            var groupLi = `<div>${groupLable}<a class="secondary-content choose-group" value="${groupId}" data-lable="${groupLable}"><i class="material-icons">send</i></a></div>`
+            $(".mail-group-choose .collection").append($("<li>").addClass("collection-item").html(groupLi))
+        }
+    }
+}
+
+var resetNewTempModel = () => {
+    $(".mail-group-choose").addClass("disappear")
+    $(".temp-back-btn").addClass("disappear")
+    $(".new-temp-prev").removeClass("disappear")
+    $(".temp-take-btn").removeClass("disappear")
+}
+
+// show modle on click
+$(".card-template").on("click", function() {
+    var template = $(this).attr("data-template")
+    var tempImg = $(this).find(".card-image").find("img").attr("src")
+    resetNewTempModel()
+    $(".new-temp-prev ").empty()
+    $(".new-temp-prev ").append($("<h4>").addClass("center modal-temp-title").text(template))
+    $(".new-temp-prev ").append($("<img>").addClass("responsive-img").attr("src", tempImg))
+})
+
+// choose temp and goes to mail group choices
+$(".temp-take-btn").on("click", function() {
+    var tempChose = $(".modal-temp-title").text()
+
+    // save chosen temp title
+    $(".choose-group").removeAttr("data-chosen")
+    $(".choose-group").attr("data-chosen", tempChose)
+
+    // goes to mail group choices
+    $(".mail-group-choose").removeClass("disappear")
+    $(".temp-back-btn").removeClass("disappear")
+    $(".new-temp-prev").addClass("disappear")
+    $(".temp-take-btn").addClass("disappear")
+})
+
+
+$(".temp-back-btn").on("click", function() {
+    resetNewTempModel()
+})
+
+$(document).on("click", ".choose-group", function() {
+    var choices = {}
+    choices.template = $(this).attr("data-chosen")
+    choices.groupid = $(this).attr("value")
+    choices.grouplable = $(this).attr("data-lable")
+    choices.user = user.id
+
+    sessionStorage.removeItem('courierchosen')
+    sessionStorage.setItem('courierchosen', JSON.stringify(choices))
+
+    window.location = `/preview`
+})
+
+// Load li on page load
+if (window.location.pathname === "/newtemp") {
+    maillistByUser(createNewTempLi)
+}
+
 
 ///////////////////////////////
 ///// NEW MAIL LIST IMPORT ////
@@ -116,14 +198,14 @@ var postToMailGroup = (userId, groupName) => {
         var colEmail = Object.keys(emailArr[0])[1]
         emailArr.forEach(function(e) {
             if (/.+\@.+\..+/gi.test(e[colEmail]) && e[colName] !== "") {
-                postToMailList(id, e[colName], e[colEmail])
+                postToMailList(id, e[colName], e[colEmail], true)
             }
         })
     })
 }
 
 // post emails to maillist
-var postToMailList = (GroupId, name, email) => {
+var postToMailList = (GroupId, name, email, bool) => {
     var newMail = {
         name: name,
         email: email,
@@ -132,7 +214,18 @@ var postToMailList = (GroupId, name, email) => {
 
     $.post("/api/maillist", newMail)
     .then(function(result) {
-        window.location = "/usermail"
+        if (bool) {
+            window.location = "/usermail"
+        } else {
+            $("#blank-add-user").remove()
+            var perEmail = `<div data-groupid="${GroupId}"><span id="this-span-name-${result.id}">${name}</span><input type='text' class='edit-name' style='display: none;'> : <span id="this-span-email-${result.id}">${email}</span><input type='text' class='edit-email' style='display: none;'> <a class="secondary-content clear-email" value="${result.id}"><i class="material-icons red-text">clear</i></a> <a class="secondary-content done-email" value="${result.id}" style="display:none;"><i class="material-icons">check</i></a> <a class="secondary-content update-email" value="${result.id}"><i class="material-icons">border_color</i></a></div>`
+            var emailLi = $(`<li id="email-${result.id}">`).addClass("collection-item").html(perEmail)
+            $(".user-mail-card .collection").append(emailLi)
+            var blank = `<div><input type='text' class='new-name'> : <input type='text' class='new-email'> <a class="btn-flat secondary-content done-new-email disabled"><i class="material-icons">check</i></a> </div>`
+            $(".user-mail-card .collection").append($(`<li id="blank-add-user" value="${GroupId}">`).addClass("collection-item").html(blank))
+            maillistByUser(inputAllCards)
+        }
+        
     })
 }
 
@@ -226,88 +319,6 @@ var resetManual = () => {
     $("#manual-lable").val("")
     $("#google-lable").val("")
     $("#google-share-link").val("")
-}
-
-///////////////////////////////
-//////// NEW TEMPLATES ////////
-///////////////////////////////
-var mailArr
-
-// Page reload get all of user's mailgroups and maillists
-var maillistByUser = (cb) => {
-    $.get(`/api/mailgroup/${user.id}`, function(data) {
-        mailArr = data
-        cb()
-    })
-}
-
-// creat the lis after chosing the templates
-var createNewTempLi = () => {
-    if ($.isEmptyObject(mailArr)) {
-        $(".mail-group-choose .collection").html($("<li>").addClass("collection-item").html($("<h6>You currently have no Mail Groups, please go to <a href='/newmail'>New Mail List</a> to create your email groups</h6>")))
-    } else {
-        for (var w = 0; w < mailArr.length; w++) {
-            var groupId = mailArr[w].id
-            var groupLable = mailArr[w].lable
-            var groupLi = `<div>${groupLable}<a class="secondary-content choose-group" value="${groupId}" data-lable="${groupLable}"><i class="material-icons">send</i></a></div>`
-            $(".mail-group-choose .collection").append($("<li>").addClass("collection-item").html(groupLi))
-        }
-    }
-}
-
-var resetNewTempModel = () => {
-    $(".mail-group-choose").addClass("disappear")
-    $(".temp-back-btn").addClass("disappear")
-    $(".new-temp-prev").removeClass("disappear")
-    $(".temp-take-btn").removeClass("disappear")
-}
-
-// show modle on click
-$(".card-template").on("click", function() {
-    var template = $(this).attr("data-template")
-    var tempImg = $(this).find(".card-image").find("img").attr("src")
-    resetNewTempModel()
-    $(".new-temp-prev ").empty()
-    $(".new-temp-prev ").append($("<h4>").addClass("center modal-temp-title").text(template))
-    $(".new-temp-prev ").append($("<img>").addClass("responsive-img").attr("src", tempImg))
-})
-
-// choose temp and goes to mail group choices
-$(".temp-take-btn").on("click", function() {
-    var tempChose = $(".modal-temp-title").text()
-
-    // save chosen temp title
-    $(".choose-group").removeAttr("data-chosen")
-    $(".choose-group").attr("data-chosen", tempChose)
-
-    // goes to mail group choices
-    $(".mail-group-choose").removeClass("disappear")
-    $(".temp-back-btn").removeClass("disappear")
-    $(".new-temp-prev").addClass("disappear")
-    $(".temp-take-btn").addClass("disappear")
-})
-
-
-$(".temp-back-btn").on("click", function() {
-    resetNewTempModel()
-})
-
-$(document).on("click", ".choose-group", function() {
-    var choices = {}
-    choices.template = $(this).attr("data-chosen")
-    choices.groupid = $(this).attr("value")
-    choices.grouplable = $(this).attr("data-lable")
-    choices.user = user.id
-
-    sessionStorage.removeItem('courierchosen')
-    sessionStorage.setItem('courierchosen', JSON.stringify(choices))
-
-    window.location = `/preview`
-})
-
-// Load li on page load
-if (window.location.pathname === "/newtemp") {
-    maillistByUser(createNewTempLi)
 }
 
 ///////////////////////////////
@@ -453,6 +464,7 @@ $(document).on("click", ".card-mail", function() {
     var groupId = $(this).attr("value")
     var arrPlace = arrPlaceById(parseInt(groupId))
     var mailListArr = mailArr[arrPlace].MailLists
+    var blank = `<div><input type='text' class='new-name'> : <input type='text' class='new-email'> <a class="btn-flat secondary-content done-new-email disabled"><i class="material-icons">check</i></a> </div>`
 
     $("#modal-mail").attr("value", groupId)
     $(".user-mail-card").html($('<ul class="collection with-header">').append(`<li class="collection-header"><h4 id="group-name-h4">${groupName}</h4><input type='text' class='edit-group-input' style='display: none;'></li>`))
@@ -460,7 +472,37 @@ $(document).on("click", ".card-mail", function() {
         var perEmail = createModelEmailEdit(arrPlace, t)
         $(".user-mail-card .collection").append(perEmail)
     }
+    $(".user-mail-card .collection").append($(`<li id="blank-add-user" value="${groupId}">`).addClass("collection-item").html(blank))
 })
+
+$(document).on("keyup", ".new-email, .new-name", function() {
+    if($(".new-email").val().trim().length > 0 && $(".new-name").val().trim().length > 0) {
+        $(".done-new-email").removeClass("disabled")
+    } else {
+        $(".done-new-email").addClass("disabled")
+    }
+    
+})
+
+$(document).on("click", ".done-new-email", function() {
+    var groupid = $(this).parent().parent().val()
+    var newname = $(".new-name").val().trim()
+    var newemail = $(".new-email").val().trim()
+    postToMailList(groupid, newname, newemail, false)
+})
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // delete email from group
 $(document).on("click", ".clear-email", function() {
