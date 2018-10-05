@@ -227,30 +227,65 @@ var resetManual = () => {
 ///////////////////////////////
 //////// NEW TEMPLATES ////////
 ///////////////////////////////
+var mailArr
+
+// Page reload get all of user's mailgroups and maillists
+var maillistByUser = (cb) => {
+    $.get(`/api/mailgroup/${user.id}`, function(data) {
+        mailArr = data
+        cb()
+    })
+}
+
+// creat the lis after chosing the templates
+var createNewTempLi = () => {
+    if ($.isEmptyObject(mailArr)) {
+        $(".mail-group-choose .collection").html($("<li>").addClass("collection-item").html($("<h6>You currently have no Mail Groups, please go to <a href='/newmail'>New Mail List</a> to create your email groups</h6>")))
+    } else {
+        for (var w = 0; w < mailArr.length; w++) {
+            var groupId = mailArr[w].id
+            var groupLable = mailArr[w].lable
+            var groupLi = `<div>${groupLable}<a class="secondary-content choose-group" value="${groupId}" data-lable="${groupLable}"><i class="material-icons">send</i></a></div>`
+            $(".mail-group-choose .collection").append($("<li>").addClass("collection-item").html(groupLi))
+        }
+    }
+}
+
+var resetNewTempModel = () => {
+    $(".mail-group-choose").addClass("disappear")
+    $(".temp-back-btn").addClass("disappear")
+    $(".new-temp-prev").removeClass("disappear")
+    $(".temp-take-btn").removeClass("disappear")
+}
+
+// show modle on click
 $(".card-template").on("click", function() {
     var template = $(this).attr("data-template")
     var tempImg = $(this).find(".card-image").find("img").attr("src")
+    resetNewTempModel()
     $(".new-temp-prev ").empty()
     $(".new-temp-prev ").append($("<h4>").addClass("center modal-temp-title").text(template))
     $(".new-temp-prev ").append($("<img>").addClass("responsive-img").attr("src", tempImg))
 })
 
+// choose temp and goes to mail group choices
 $(".temp-take-btn").on("click", function() {
     var tempChose = $(".modal-temp-title").text()
+
+    // save chosen temp title
     $(".choose-group").removeAttr("data-chosen")
     $(".choose-group").attr("data-chosen", tempChose)
 
+    // goes to mail group choices
     $(".mail-group-choose").removeClass("disappear")
     $(".temp-back-btn").removeClass("disappear")
     $(".new-temp-prev").addClass("disappear")
     $(".temp-take-btn").addClass("disappear")
 })
 
+
 $(".temp-back-btn").on("click", function() {
-    $(".mail-group-choose").addClass("disappear")
-    $(".temp-back-btn").addClass("disappear")
-    $(".new-temp-prev").removeClass("disappear")
-    $(".temp-take-btn").removeClass("disappear")
+    resetNewTempModel()
 })
 
 $(document).on("click", ".choose-group", function() {
@@ -266,9 +301,29 @@ $(document).on("click", ".choose-group", function() {
     window.location = `/preview`
 })
 
+// Load li on page load
+if (window.location.pathname === "/newtemp") {
+    maillistByUser(createNewTempLi)
+}
+
 ///////////////////////////////
 //////// Preview Page /////////
 ///////////////////////////////
+
+var getUpdatedMailList = () => {
+    var id = prevData.groupid
+    var place = arrPlaceById(parseInt(id))
+    var mailListArr = mailArr[place].MailLists
+    var mailList = []
+    mailListArr.forEach(function(i) {
+        var data = {name: i.name, email:i.email}
+        mailList.push(data)
+    })
+    
+    sessionStorage.removeItem('couriermaillist')
+    sessionStorage.setItem('couriermaillist', JSON.stringify(mailList))
+}
+
 if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') === null) {
     window.location = "/newtemp"
 } else if (window.location.pathname === "/preview") {
@@ -280,42 +335,51 @@ if (window.location.pathname === "/preview" && sessionStorage.getItem('courierch
 
 $("#user-temp-lable").on("keyup", function() {
     if($("#user-temp-lable").val().trim().length > 0) {
-        $("#prev-submit-btn").removeClass("disabled")
+        $("#prev-submit").removeClass("disabled")
     } else {
-        $("#prev-submit-btn").addClass("disabled")
+        $("#prev-submit").addClass("disabled")
     }
 })
 
-// $("#prev-submit-btn").on("click", function() {
+// The real functionallity
+$("#prev-submit").on("click", function() {
+    maillistByUser(getUpdatedMailList)
+    var mailList = JSON.parse(sessionStorage.getItem('couriermaillist'))
+    var subject = $("#user-temp-lable").val().trim()
+    var userTemp = $("#temp-area-prev").html()
+
+    var emailInfo = {subject: subject, body: userTemp, alias: user.firstName}
+
+    sessionStorage.removeItem('courieremailinfo')
+    sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
+
+    window.location = "/sending"
+})
+
+// $("#prev-submit-btn").on("click", function () {
 //     var userTemp = $("#temp-area-prev").html()
 //     var userlable = $("#user-temp-lable").val().trim()
 //     var mailList = [
 //         {
-//             "name":"Dale Padelford",
-//             "email":"jeffymenda@gmail.com"
-//         },
-//         {
-//             "name":"Jeremy You",
-//             "email":"cefi@vamoose.it"
-//         },
-//         {
-//             "name":"Cefi Menda",
-//             "email":"cefimenda@intellioninc.com"
+//             "name": "Katherine He",
+//             "email": "sakura_saki321@yahoo.com"
 //         }
-//     ]
+//     ];
 //     var emailInfo = {
-//         subject:"some subject ###fname###",
-//         body:userTemp,
-//         alias:"I am great"
-//     }
-//     $.get("/api/reqLink/" + JSON.parse(sessionStorage.getItem("courieruser")).id, function (response) {
-//         $.post(response,{mailList,emailInfo},function(response){
-//             console.log("Mails Sent");
-//             console.log(response);
-//             //TODO CREATE AN EMAIL SENT MESSAGE ON SCREEN
-//         })
+//         subject: "some subject ###fname###",
+//         body: userTemp,
+//         alias: "I am great"
+//     };
+//     var userId = JSON.parse(sessionStorage.getItem("courieruser")).id;
+//     var package = { mailList: mailList, emailInfo: emailInfo };
+//     console.log(package)
+//     $.post("/api/sendEmail",  {userId, package} , function (response) {
+//         console.log(response);
+//         //TODO CREATE AN EMAIL SENT MESSAGE ON SCREEN
 //     });
 // })
+
+
 
 ///////////////////////////////
 /////// USER TEMPLATE ////////
@@ -325,15 +389,6 @@ $("#user-temp-lable").on("keyup", function() {
 ///////////////////////////////
 /////// USER MAIL LIST ////////
 ///////////////////////////////
-var mailArr
-
-// Page reload get all of user's mailgroups and maillists
-var maillistByUser = (cb) => {
-    $.get(`/api/mailgroup/${user.id}`, function(data) {
-        mailArr = data
-        cb()
-    })
-}
 
 // create cards with info in mailArr (need maillistByUser to be called first)
 var inputAllCards = () => {
@@ -518,5 +573,36 @@ $("#change-group-name").on("click", function() {
         maillistByUser(inputAllCards)
     });
 })
+
+
+///////////////////////////////
+/////////// SENDING ///////////
+///////////////////////////////
+$("#alias-input").on("keyup", function() {
+    if($("#alias-input").val().trim().length > 0) {
+        $("#sendMailButton").removeClass("disabled")
+    } else {
+        $("#sendMailButton").addClass("disabled")
+    }
+})
+
+if (window.location.pathname === "/sending" && sessionStorage.getItem('courierchosen') === null) {
+    window.location = "/newtemp"
+} else if (window.location.pathname === "/sending" && sessionStorage.getItem('courieremailinfo') === null) {
+    window.location = "/preview"
+} else if (window.location.pathname === "/sending") {
+    var couriormail = JSON.parse(sessionStorage.getItem('couriermaillist'))
+    var couriorinfo = JSON.parse(sessionStorage.getItem('courieremailinfo'))
+    var mailTo = ""
+
+    couriormail.forEach(function(k) {
+        mailTo = mailTo.concat(` ${k.email},`)
+    })
+    mailTo = mailTo.slice(0, -1)
+    $("#all-the-emails").text(mailTo)
+    $("#subject").text(couriorinfo.subject)
+    $("#page-to-prev").html(couriorinfo.body)
+    $("#alias-input").val(couriorinfo.alias)
+}
 
 })

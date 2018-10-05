@@ -14,7 +14,7 @@ body, html {
   overflow: hidden;
   box-sizing: border-box;
   height: 100vh;
-  font-family: var(--text);
+  
   position: relative;
   background-color: #eee;
   z-index: -2;
@@ -367,6 +367,23 @@ input.edit-email {
 /* Preview page */
 .preview-group-title {
   font-weight: bold;
+}
+
+/* Sending */
+#all-the-emails,
+#subject,
+#alias-input {
+  font-family: var(--text);
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-weight: normal;
+}
+
+input,
+input:hover,
+input:focus,
+input:active {
+ box-shadow: none;
 }
 /* ////////////////////////////////////// */
 /* //////////// Media Queries /////////// */
