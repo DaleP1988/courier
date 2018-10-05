@@ -316,81 +316,7 @@ $(function() {
         $("#google-share-link").val("")
     }
     
-    ///////////////////////////////
-    //////// Preview Page /////////
-    ///////////////////////////////
-    
-    var getUpdatedMailList = () => {
-        var id = prevData.groupid
-        var place = arrPlaceById(parseInt(id))
-        var mailListArr = mailArr[place].MailLists
-        var mailList = []
-        mailListArr.forEach(function(i) {
-            var data = {name: i.name, email:i.email}
-            mailList.push(data)
-        })
-        
-        sessionStorage.removeItem('couriermaillist')
-        sessionStorage.setItem('couriermaillist', JSON.stringify(mailList))
-    }
-    
-    if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') === null) {
-        window.location = "/newtemp"
-    } else if (window.location.pathname === "/preview") {
-        $(".preview-group-title").text(prevData.grouplable)
-        $.get(`/api/newtemp/${prevData.template}`, function(data) {
-            $("#temp-area-prev").html(data.template)
-        })
-    }
-    
-    $("#user-temp-lable").on("keyup", function() {
-        if($("#user-temp-lable").val().trim().length > 0) {
-            $("#prev-submit").removeClass("disabled")
-        } else {
-            $("#prev-submit").addClass("disabled")
-        }
-    })
-    
-    // The real functionallity
-    $("#prev-submit").on("click", function() {
-        maillistByUser(getUpdatedMailList)
-        var mailList = JSON.parse(sessionStorage.getItem('couriermaillist'))
-        var subject = $("#user-temp-lable").val().trim()
-        var userTemp = $("#temp-area-prev").html()
-    
-        var emailInfo = {subject: subject, body: userTemp, alias: user.firstName}
-    
-        sessionStorage.removeItem('courieremailinfo')
-        sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
-    
-        window.location = "/sending"
-    })
-    
-    // $("#prev-submit-btn").on("click", function () {
-    //     var userTemp = $("#temp-area-prev").html()
-    //     var userlable = $("#user-temp-lable").val().trim()
-    //     var mailList = [
-    //         {
-    //             "name": "Katherine He",
-    //             "email": "sakura_saki321@yahoo.com"
-    //         }
-    //     ];
-    //     var emailInfo = {
-    //         subject: "some subject ###fname###",
-    //         body: userTemp,
-    //         alias: "I am great"
-    //     };
-    //     var userId = JSON.parse(sessionStorage.getItem("courieruser")).id;
-    //     var package = { mailList: mailList, emailInfo: emailInfo };
-    //     console.log(package)
-    //     $.post("/api/sendEmail",  {userId, package} , function (response) {
-    //         console.log(response);
-    //         //TODO CREATE AN EMAIL SENT MESSAGE ON SCREEN
-    //     });
-    // })
-    
-    
-    
+
     ///////////////////////////////
     /////// USER TEMPLATE ////////
     ///////////////////////////////
@@ -632,6 +558,133 @@ $(function() {
         $("#page-to-prev").html(couriorinfo.body)
         $("#alias-input").val(couriorinfo.alias)
     }
+
+    ///////////////////////////////
+    //////// Preview Page /////////
+    ///////////////////////////////
+    function goLogo(){
+        var Logo = $("#logo-input").val().trim(); 
+        console.log(Logo);
+        if(Logo !== ""){
+            $(".logo").attr("src", Logo);
+        }
+    }
     
+    function goMainImg(){
+        var mainImage = $("#main-image").val().trim();
+        console.log(mainImage);
+        if(mainImage !== ""){
+            $(".mainImg").attr("src" , mainImage);
+        }
+    }
+    
+    
+    function goName(){
+        var Name =  $("#name-input").val().trim();
+        console.log(Name);
+        if(Name !== ""){
+            var tempName = $(".name");
+            tempName.html("<h4>" +  Name  + "</h4>");
+        }
+    }
+    
+    function goPosition(){
+        var currentPosition =  $("#position-input").val().trim();
+        console.log(currentPosition);
+        if(currentPosition !== ""){
+            var tempPosition = $(".position");
+            tempPosition.html("<h4>" + currentPosition + "<h4>");
+        
+        } 
+    }
+    
+    function goTelephone(){
+        var Telephone =  $("#telephone").val().trim();
+        console.log(Telephone);
+        if(Telephone !== ""){
+            var tempPhone = $(".telephone");
+            tempPhone.html("<h4>" + Telephone + "<h4>");
+        } 
+    }
+    
+    function goEmail(){
+        var Email = $("#email-input").val().trim();
+        console.log(Email);
+        if(Email !== ""){
+            var tempEmail = $(".email");
+            tempEmail.html("<h4>" + Email + "<h4>");
+        
+        } 
+    }
+    
+    function postHTML(lable, minHTML){
+        var getHTML = $("#temp-area-prev").html();
+        getHTML = getHTML.replace(/\s\s+/g,"")
+        console.log(getHTML);
+        return getHTML 
+    }
+    
+    //clear form fields
+    
+    function clear(){
+        $("#logo-input").val("");
+        $("#main-image").val("");
+        $("#name-input").val("");
+        $("#position-input").val("");
+        $("#telephone").val("");
+        $("#email-input").val("");   
+    }
+    
+    var getUpdatedMailList = () => {
+        var id = prevData.groupid
+        var place = arrPlaceById(parseInt(id))
+        var mailListArr = mailArr[place].MailLists
+        var mailList = []
+        mailListArr.forEach(function(i) {
+            var data = {name: i.name, email:i.email}
+            mailList.push(data)
+        })
+        
+        sessionStorage.removeItem('couriermaillist')
+        sessionStorage.setItem('couriermaillist', JSON.stringify(mailList))
+    }
+    
+    if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') === null) {
+        window.location = "/newtemp"
+    } else if (window.location.pathname === "/preview") {
+        $(".preview-group-title").text(prevData.grouplable)
+        $.get(`/api/newtemp/${prevData.template}`, function(data) {
+            $("#temp-area-prev").html(data.template)
+        })
+    }
+    
+    $("#user-temp-lable").on("keyup", function() {
+        if($("#user-temp-lable").val().trim().length > 0) {
+            $("#prev-submit").removeClass("disabled")
+        } else {
+            $("#prev-submit").addClass("disabled")
+        }
     })
+    
+    // The real functionallity
+    $("#prev-submit").on("click", function() {
+        maillistByUser(getUpdatedMailList)
+        // var mailList = JSON.parse(sessionStorage.getItem('couriermaillist'))
+        var subject = $("#user-temp-lable").val().trim()
+        goLogo();
+        goMainImg();
+        goName();
+        goPosition();
+        goTelephone();
+        goEmail();
+        var userTemp = postHTML();
+        var emailInfo = {subject: subject, body: userTemp, alias: user.firstName}
+    
+        // sessionStorage.removeItem('courieremailinfo')
+        // sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
+    
+        // window.location = "/sending"
+    })
+
+})
     
