@@ -17,10 +17,11 @@
         var profile = googleUser.getBasicProfile()
         //var id = profile.getId()
         var user = {}
+        var other
         user.firstName = profile.getGivenName()
         user.lastName = profile.getFamilyName()
         user.googleUser = profile.getEmail()
-        user.img = profile.getImageUrl()
+        //user.img = profile.getImageUrl()
 
         $.get(`/api/user/${user.googleUser}`, function(data) {
             if(data) {
@@ -30,20 +31,25 @@
                     url: "/api/users",
                     data: user
                 }).then(function(result) {
-                    console.log(results)
-                });
-                if (data.emailReqLink) {
-                    if (sessionStorage.getItem("couriersignin") !== null) {
-                        user.emailReqLink = data.emailReqLink
+                    console.log(result)
+                    if (data.emailReqLink) {
+                        if (sessionStorage.getItem("couriersignin") !== null) {
+                            other = user
+                            other.img = profile.getImageUrl()
+                            other.emailReqLink = data.emailReqLink
+                            sessionStorage.removeItem('courieruser')
+                            sessionStorage.setItem('courieruser', JSON.stringify(other))
+                            window.location = "/first"
+                        }
+                    } else {
+                        other = user
+                        other.img = profile.getImageUrl()
                         sessionStorage.removeItem('courieruser')
-                        sessionStorage.setItem('courieruser', JSON.stringify(user))
-                        window.location = "/first"
+                        sessionStorage.setItem('courieruser', JSON.stringify(other))
+                        window.location = "/installation"
                     }
-                } else {
-                    sessionStorage.removeItem('courieruser')
-                    sessionStorage.setItem('courieruser', JSON.stringify(user))
-                    window.location = "/installation"
-                }
+                });
+
             } else {
                 $.post("/api/user", user, function(result) {
                     onSignIn(googleUser)
