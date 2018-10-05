@@ -15,16 +15,19 @@ function createMailList(mailList) {
     sheet.getRange("A1").setValue("Name");
     sheet.getRange("B1").setValue("Email");
     sheet.getRange("C1").setValue("Status");
+    sheet.getRange("D1").setValue("groupID");
 
     j = 0;
     for (var i = 2; i < mailList.length + 2; i++) {
         sheet.getRange("A" + i).setValue(mailList[j].name);
         sheet.getRange("B" + i).setValue(mailList[j].email);
+        sheet.getRange("D" + i).setValue(mailList[j].groupID);
+
         j++;
     };
 };
 function filledCount() {
- 
+
     var count = 0;
     t = 1;
     var tester = sheet.getRange("A" + t);
@@ -35,10 +38,13 @@ function filledCount() {
     };
     return count;
 };
-function varString(str, firstname, name) {
+function varString(str, user) {
     var newStr = str;
-    newStr = newStr.replace("###name###", name);
-    newStr = newStr.replace("###fname###", firstname);
+    newStr = newStr.replace("###name###", user.name);
+    newStr = newStr.replace("###fname###", user.firstname);
+    newStr = newStr.replace("###groupID###", user.groupID);
+    newStr = newStr.replace("###email###", user.mail);
+
     return newStr;
 };
 
@@ -47,18 +53,20 @@ function sendMails(emailInfo) {
 
 
     for (i = 2; i < count + 1; i++) {
-        var name = sheet.getRange("A" + i).getValue();
-        var firstname = name.split(' ')[0];
-        var mail = sheet.getRange("B" + i).getValue();
-        var subject = varString(emailInfo.subject, firstname, name);
+        var user = {
+            name: sheet.getRange("A" + i).getValue(),
+            firstname: user.name.split(' ')[0],
+            mail: sheet.getRange("B" + i).getValue(),
+            groupID: sheet.getRange("D" + i).getValue()
+        };
+
+        var subject = varString(emailInfo.subject,user);
         var status = sheet.getRange("D" + i);
-        var body = varString(emailInfo.body, firstname, name);
+        var body = varString(emailInfo.body, user);
 
         if (status.isBlank()) {
-
-
             MailApp.sendEmail({
-                to: mail,
+                to: user.mail,
                 subject: subject,
                 htmlBody: body,
                 name: emailInfo.alias,

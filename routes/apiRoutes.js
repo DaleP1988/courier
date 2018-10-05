@@ -278,5 +278,7 @@ module.exports = function(app) {
   //   });
   // });
 
+  //UNSUBSCRIBE
+  app.get("/api/unsubscribe/:mailGroup/:email")
 };
 
