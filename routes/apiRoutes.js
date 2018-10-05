@@ -1,5 +1,6 @@
 var db = require("../models");
-var request = require("request");
+
+const request = require('request')
 const axios = require('axios')
 
 module.exports = function(app) {
@@ -239,19 +240,14 @@ module.exports = function(app) {
           mailList: mailList,
           emailInfo: emailInfo
         };
-        var url = "https://script.google.com/macros/s/AKfycbxwcvgHAzVFl_Uzx0N8saGU5BxcoI-XGf2glETvYWKwGMO-TBc/exec";
-        var options = {
-          method: 'post',
-          body: JSON.stringify(postData),
-          json: true,
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          url: url
-        };
+
+        var url = result.emailReqLink;
 
         axios.post(url, postData)
           .then(function (response) {
             console.log("Success==========")
             console.log(response);
+            res.send("success")
           })
           .catch(function (error) {
             console.log("ERROR==========")
@@ -264,4 +260,23 @@ module.exports = function(app) {
     });
   });
 
+  // //Update the database with the filled Templates
+
+  // app.post("/api/sendTemplate", function(req, res) {
+  
+  //   db.idtemps.update({   
+  //     template: req.body.template
+  //   }, {
+  //     where: {
+  //       lable: req.body.lable
+  //     }
+  //   }).then(function(result) {
+  //     res.json(result);
+  //   })
+  //   .catch(function(err) {
+  //     res.status(400).json(err);
+  //   });
+  // });
+
 };
+
