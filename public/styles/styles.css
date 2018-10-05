@@ -242,7 +242,8 @@ nav {
 .card-template:hover,
 .choose-group:hover,
 .update-email:hover,
-.clear-email:hover {
+.clear-email:hover,
+.done-email:hover {
   cursor: pointer;
 }
 
