@@ -1,9 +1,5 @@
 var db = require("../models");
-<<<<<<< HEAD
-var request = require("request");
-=======
 const request = require('request')
->>>>>>> afb2a6785470f95a9e8418233b70cea6a4d6fcb3
 const axios = require('axios')
 
 module.exports = function (app) {
@@ -81,13 +77,8 @@ module.exports = function (app) {
       });
   });
 
-<<<<<<< HEAD
   // Delete from Mail Group
   app.delete("/api/mailgroup/:id", function(req, res) {
-=======
-  // Delete from Mail List
-  app.delete("/api/mailgroup/:id", function (req, res) {
->>>>>>> afb2a6785470f95a9e8418233b70cea6a4d6fcb3
     db.MailGroup.destroy({
       where: {
         id: req.params.id
@@ -236,27 +227,6 @@ module.exports = function (app) {
     let mailList;
     let emailInfo;
 
-<<<<<<< HEAD
-=======
-  // // Create Mail Group
-  // app.post("/api/maillist", function (req, res) {
-  //   db.MailList.create(req.body)
-  //     .then(function (result) {
-  //       res.json(result);
-  //     })
-  //     .catch(function (err) {
-  //       res.status(400).json(err);
-  //     });
-  // });
-
-
-  // Sending Emails
-
-  app.post("/api/sendEmail", function (req, res) {
-    let mailList;
-    let emailInfo;
-
->>>>>>> afb2a6785470f95a9e8418233b70cea6a4d6fcb3
     mailList = req.body.package.mailList;
     emailInfo = req.body.package.emailInfo;
     db.User.findOne({
@@ -269,24 +239,13 @@ module.exports = function (app) {
           mailList: mailList,
           emailInfo: emailInfo
         };
-<<<<<<< HEAD
-        var url = "https://script.google.com/macros/s/AKfycbxwcvgHAzVFl_Uzx0N8saGU5BxcoI-XGf2glETvYWKwGMO-TBc/exec";
-=======
         var url = result.emailReqLink;
-
->>>>>>> afb2a6785470f95a9e8418233b70cea6a4d6fcb3
-        var options = {
-          method: 'post',
-          body: JSON.stringify(postData),
-          json: true,
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          url: url
-        };
 
         axios.post(url, postData)
           .then(function (response) {
             console.log("Success==========")
             console.log(response);
+            res.send("success")
           })
           .catch(function (error) {
             console.log("ERROR==========")
@@ -299,24 +258,26 @@ module.exports = function (app) {
     });
   });
 
+  // //Update the database with the filled Templates
+
+  // app.post("/api/sendTemplate", function(req, res) {
+  
+  //   db.idtemps.update({   
+  //     template: req.body.template
+  //   }, {
+  //     where: {
+  //       lable: req.body.lable
+  //     }
+  //   }).then(function(result) {
+  //     res.json(result);
+  //   })
+  //   .catch(function(err) {
+  //     res.status(400).json(err);
+  //   });
+  // });
+
 };
 
-//Update the database with the filled Templates
 
-app.post("/api/sendTemplate", function(req, res) {
- 
-  db.idtemps.update({   
-    template: req.body.template
-  }, {
-    where: {
-      lable: req.body.lable
-    }
-  }).then(function(result) {
-    res.json(result);
-  })
-  .catch(function(err) {
-    res.status(400).json(err);
-  });
-});
 
 
