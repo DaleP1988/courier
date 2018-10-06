@@ -28,7 +28,7 @@ $(function() {
             $.ajax({
                 method: "PUT",
                 url: "/api/img",
-                data: {img: changebg, googleUser: user.googleUser}
+                data: {bgimg: changebg, googleUser: user.googleUser}
             }).then(function(result) {
                 $(".sidenav-background").attr("src", changebg)
                 $("#bg-changer").val("")
@@ -52,14 +52,30 @@ $(function() {
     //////// NEW TEMPLATES ////////
     ///////////////////////////////
     var mailArr
+    var dontSend = []
+    var sendOnly = []
     
     // Page reload get all of user's mailgroups and maillists
-    var maillistByUser = (cb) => {
-        $.get(`/api/mailgroup/${user.id}`, function(data) {
+    var maillistByUser = async (cb) => {
+        await $.get(`/api/mailgroup/${user.id}`, function(data) {
             mailArr = data
             cb()
         })
     }
+
+    // var filterUnsubscribe = (id) => {
+    //     var place = arrPlaceById(parseInt(id))
+    //     var thisMailGroup = maiArr[place]
+        
+    //     thisMailGroup.forEach(function(i) {
+    //         if (i.unsubscribe) {
+    //             dontSend.push()
+    //         } else {
+
+    //         }
+    //     })
+    // }
+
     
     // creat the lis after chosing the templates
     var createNewTempLi = () => {
@@ -548,10 +564,12 @@ $(function() {
         var couriormail = JSON.parse(sessionStorage.getItem('couriermaillist'))
         var couriorinfo = JSON.parse(sessionStorage.getItem('courieremailinfo'))
         var mailTo = ""
-    
-        couriormail.forEach(function(k) {
-            mailTo = mailTo.concat(` ${k.email},`)
-        })
+        for (var r = 0; r < couriormail.length; r++) {
+            mailTo = mailTo.concat(` ${couriormail[r].email},`)
+        }
+        // couriormail.forEach(function(k) {
+        //     mailTo = mailTo.concat(` ${couriormail[r].email},`)
+        // })
         mailTo = mailTo.slice(0, -1)
         $("#all-the-emails").text(mailTo)
         $("#subject").text(couriorinfo.subject)
@@ -584,7 +602,7 @@ $(function() {
         console.log(Name);
         if(Name !== ""){
             var tempName = $(".name");
-            tempName.html("<h4>" +  Name  + "</h4>");
+            tempName.html("<p>" + Name  + "</p>");
         }
     }
     
@@ -593,7 +611,7 @@ $(function() {
         console.log(currentPosition);
         if(currentPosition !== ""){
             var tempPosition = $(".position");
-            tempPosition.html("<h4>" + currentPosition + "<h4>");
+            tempPosition.html("<p>" + currentPosition + "<p>");
         
         } 
     }
@@ -603,7 +621,7 @@ $(function() {
         console.log(Telephone);
         if(Telephone !== ""){
             var tempPhone = $(".telephone");
-            tempPhone.html("<h4>" + Telephone + "<h4>");
+            tempPhone.html("<p>" + Telephone + "<p>");
         } 
     }
     
@@ -612,12 +630,12 @@ $(function() {
         console.log(Email);
         if(Email !== ""){
             var tempEmail = $(".email");
-            tempEmail.html("<h4>" + Email + "<h4>");
+            tempEmail.html("<p>" + Email + "<p>");
         
         } 
     }
     
-    function postHTML(lable, minHTML){
+    function postHTML(){
         var getHTML = $("#temp-area-prev").html();
         getHTML = getHTML.replace(/\s\s+/g,"")
         console.log(getHTML);
@@ -625,7 +643,6 @@ $(function() {
     }
     
     //clear form fields
-    
     function clear(){
         $("#logo-input").val("");
         $("#main-image").val("");
@@ -652,7 +669,7 @@ $(function() {
     if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') === null) {
         window.location = "/newtemp"
     } else if (window.location.pathname === "/preview") {
-        $(".preview-group-title").text(prevData.grouplable)
+        clear()
         $.get(`/api/newtemp/${prevData.template}`, function(data) {
             $("#temp-area-prev").html(data.template)
         })
@@ -669,6 +686,7 @@ $(function() {
     // The real functionallity
     $("#prev-submit").on("click", function() {
         maillistByUser(getUpdatedMailList)
+        filterUnsubscribe(id)
         // var mailList = JSON.parse(sessionStorage.getItem('couriermaillist'))
         var subject = $("#user-temp-lable").val().trim()
         goLogo();
@@ -680,10 +698,10 @@ $(function() {
         var userTemp = postHTML();
         var emailInfo = {subject: subject, body: userTemp, alias: user.firstName}
     
-        // sessionStorage.removeItem('courieremailinfo')
-        // sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
+        sessionStorage.removeItem('courieremailinfo')
+        sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
     
-        // window.location = "/sending"
+        window.location = "/sending"
     })
 
 })
