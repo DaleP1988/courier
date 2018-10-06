@@ -385,7 +385,6 @@ $(function () {
         }
         var subject = $(this).attr("data-subject")
         var userTemp = tempArr[t].body
-        userTemp = userTemp.concat("<div style='width:100%;text-align:center'><a class = 'mj-column-per-100 outlook-group-fix' align = 'center' href = 'https://courier-heroku-app.herokuapp.com/api/unubscribe/###groupID###/###email###'>Click to unsubscribe from this mailing group</a></div>")
         var emailInfo = { subject: subject, body: userTemp, alias: user.firstName }
         sessionStorage.removeItem('courieremailinfo')
         sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
@@ -666,7 +665,6 @@ $(function () {
     ///////////////////////////////
     $("#logo-input").focusout(function() {
         var logo = $(this).val().trim();
-        console.log(logo);
         if (logo !== "") {
             $(".logo").attr("src", logo);
         }
@@ -674,23 +672,21 @@ $(function () {
 
     $("#main-image").focusout(function() {
         var mainImage = $(this).val().trim();
-        console.log(mainImage);
         if (mainImage !== "") {
             $(".mainImg").attr("src", mainImage);
         }
     });
 
-    $("#name-input").focusout(function() {
-        var name = $(this).val().trim();
-        console.log(name);
-        if (name !== "") {
-            $(".add-name").text(name)
-        }
-    });
+    // $("#name-input").focusout(function() {
+    //     var name = $(this).val().trim();
+    //     console.log(name);
+    //     if (name !== "") {
+    //         $(".add-name").text(name)
+    //     }
+    // });
 
     $("#position-input").focusout(function() {
         var currentPosition = $(this).val().trim();
-        console.log(currentPosition);
         if (currentPosition !== "") {
             $(".add-position").text(currentPosition)
         }
@@ -698,7 +694,6 @@ $(function () {
 
     $("#telephone").focusout(function() {
         var telephone = $(this).val().trim();
-        console.log(telephone);
         if (telephone !== "") {
             $(".telephone").text(telephone)
         }
@@ -706,7 +701,6 @@ $(function () {
 
     $("#email-input").focusout(function() {
         var email = $(this).val().trim();
-        console.log(email);
         if (email !== "") {
             $(".email").text(email)
         }
@@ -715,7 +709,6 @@ $(function () {
     function postHTML() {
         var getHTML = $("#temp-area-prev").html();
         getHTML = getHTML.replace(/\s\s+/g, "")
-        console.log(getHTML);
         return getHTML
     }
 
@@ -749,7 +742,7 @@ $(function () {
         clear()
         $.get(`/api/newtemp/${prevData.template}`, function (data) {
             $("#temp-area-prev").html(data.template)
-            $(".name").append("p").html("Name: <span class='add-name'>###name###</span>")
+            $(".add-name").text(`${user.firstName} ${user.lastName}`)
             $(".email").append("p").html("Email: <span class='add-email'>john.do@email.com</span>")
             $(".position").append("p").html("Position: <span class='add-position'>Jr Manager</span>")
             $(".telephone").append("p").html("Telephone: <span class='add-telephone'>555-555-5555</span>")
