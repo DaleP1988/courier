@@ -54,7 +54,7 @@ module.exports = function (app) {
   // Update Img
   app.put("/api/img", function (req, res) {
     db.User.update({
-      img: req.body.img
+      bgimg: req.body.img
     }, {
         where: {
           googleUser: req.body.googleUser

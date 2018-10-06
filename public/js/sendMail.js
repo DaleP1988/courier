@@ -15,9 +15,8 @@ $(function () {
         $.post("/api/sendEmail",  {userId, package} , function (response) {
             console.log(response);
             //TODO CREATE AN EMAIL SENT MESSAGE ON SCREEN
-            $.post("/api/usertemp",{lable: emailInfo.subject, template: emailInfo.subject, UserId: user.id}, function(result) {
+            $.post("/api/usertemp",{lable: emailInfo.subject, body: emailInfo.body, template: choices.template, UserId: user.id}, function(result) {
                 console.log("Mails Sent");
-                console.log(response);
                 //TODO CREATE AN EMAIL SENT MESSAGE ON SCREEN
                 sessionStorage.removeItem('courierchosen')
                 sessionStorage.removeItem('couriermaillist')

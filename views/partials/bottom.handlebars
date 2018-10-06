@@ -32,9 +32,9 @@
         } else {
             var user = JSON.parse(sessionStorage.getItem('courieruser'))
 
-            $(".welcome .name").text(user.firstName)
-            $(".user-view .email").text(user.googleUser)
-            $(".user-view .name").text(`${user.firstName} ${user.lastName}`)
+            $(".welcome .my-name").text(user.firstName)
+            $(".user-view .my-email").text(user.googleUser)
+            $(".user-view .my-name").text(`${user.firstName} ${user.lastName}`)
             if (user.img !== "") {
                 $(".circle").attr("src", user.img)
             }
@@ -44,8 +44,8 @@
             }
 
             $.get(`/api/user/${user.googleUser}`, function(data) {
-                if (data.img !== null) {
-                    $(".sidenav-background").attr("src", data.img)
+                if (data.bgimg !== null) {
+                    $(".sidenav-background").attr("src", data.bgimg)
                 }
             })
         }
