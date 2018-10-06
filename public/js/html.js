@@ -3,6 +3,7 @@ $(function () {
     var user = JSON.parse(sessionStorage.getItem('courieruser'))
     var prevData = JSON.parse(sessionStorage.getItem('courierchosen'))
     var emailArr = [] // needed for importing emails to mailLists table
+    var mailArr
     var manualRowCount = 1 // needed for create new manual rows
 
     // reset user when logoff
@@ -52,11 +53,11 @@ $(function () {
     ///////////////////////////////
     //////// NEW TEMPLATES ////////
     ///////////////////////////////
-    var mailArr
+    
 
-    var dontSend = []
-    var sendOnly = []
-
+    // var dontSend = []
+    // var sendOnly = []
+    
     // Page reload get all of user's mailgroups and maillists
     var maillistByUser = (cb) => {
         return new Promise((resolve, reject) => {
@@ -65,11 +66,9 @@ $(function () {
                 cb()
                 resolve()
             })
-
         })
 
     }
-
 
     // var filterUnsubscribe = (id) => {
     //     var place = arrPlaceById(parseInt(id))
@@ -87,6 +86,7 @@ $(function () {
 
     var onUserTemp
 
+    var getChosen
     // creat the lis after chosing the templates
     var createNewTempLi = () => {
         if ($.isEmptyObject(mailArr)) {
@@ -98,6 +98,7 @@ $(function () {
                 var groupLi
                 if (onUserTemp) {
                     groupLi = `<div>${groupLable}<a class="secondary-content temp-choose-group" value="${groupId}" data-lable="${groupLable}"><i class="material-icons">send</i></a></div>`
+                    // food =
                 } else {
                     groupLi = `<div>${groupLable}<a class="secondary-content choose-group" value="${groupId}" data-lable="${groupLable}"><i class="material-icons">send</i></a></div>`
                 }
@@ -325,10 +326,7 @@ $(function () {
             for (let i = 1; i < manualRowCount; i++) {
                 var name = $(`.input-${i} .input-field .manual-name`).val().trim()
                 var email = $(`.input-${i} .input-field .manual-email`).val().trim()
-                var company = $(`.input-${i} .input-field .manual-company`).val()
-                if (company) { company = company.trim() }
-
-                var obj = { name: name, email: email, company: company }
+                var obj = { name: name, email: email }
                 emailArr.push(obj)
             }
 
@@ -337,6 +335,7 @@ $(function () {
             $(".helper-text").text("there is an error somewhere, please check your entrys")
         }
     })
+
 
     // reset all
     var resetManual = () => {
@@ -357,7 +356,6 @@ $(function () {
     ///////////////////////////////
     /////// USER TEMPLATE ////////
     ///////////////////////////////
-
     var tempArr = []
 
     var getusertemp = () => {
@@ -372,34 +370,55 @@ $(function () {
     }
 
     var makeTempCard = (place) => {
-        var $card = $("<div>").addClass("col s12 m4").html(`<div class="card user-card-template modal-trigger" data-template="${tempArr[place].template}" data-target="modal-user-temp" value="${tempArr[place].id}"><div class="card-image"><img class="card-img" src="/images/colorways/${tempArr[place].template}.png"><div class="card__text center"><h4 class="card__title">${tempArr[place].template}</h4><p class="card__body">${tempArr[place].lable}</p></div></div></div>`)
+        var $card = $("<div>").addClass("col s12 m4").html(`<div class="card user-card-template modal-trigger" data-template="${tempArr[place].template}" data-subject="${tempArr[place].lable}" data-target="modal-user-temp" value="${tempArr[place].id}"><div class="card-image"><img class="card-img" src="/images/colorways/${tempArr[place].template}.png"><div class="card__text center"><h5 class="card__title">${tempArr[place].template}</h5><p class="card__body">${tempArr[place].lable}</p></div></div></div>`)
         $(".temp-card-holder").append($card)
     }
 
+
     $(document).on("click", ".user-card-template", function() {
-        maillistByUser(createNewTempLi)
+        var usertempid = parseInt($(this).attr("value"))
+        var t
+        for (var z = 0; z < tempArr.length; z++) {
+            if (tempArr[z].id === usertempid) {
+                t = z
+            }
+        }
+        var subject = $(this).attr("data-subject")
+        var userTemp = tempArr[t].body
+        userTemp = userTemp.concat("<div style='width:100%;text-align:center'><a class = 'mj-column-per-100 outlook-group-fix' align = 'center' href = 'https://courier-heroku-app.herokuapp.com/api/unubscribe/###groupID###/###email###'>Click to unsubscribe from this mailing group</a></div>")
+        var emailInfo = { subject: subject, body: userTemp, alias: user.firstName }
+        sessionStorage.removeItem('courieremailinfo')
+        sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
+
+        prevData = {}
+        prevData.template = $(this).attr("data-template")
+        prevData.user = user.id
     })
 
-    // $(document).on("click", ".temp-choose-group", function() {
-    //     var choices = {}
-    //     choices.template = $(this).attr("data-chosen")
-    //     choices.groupid = $(this).attr("value")
-    //     choices.grouplable = $(this).attr("data-lable")
-    //     choices.user = user.id
-    
-    //     sessionStorage.removeItem('courierchosen')
-    //     sessionStorage.setItem('courierchosen', JSON.stringify(choices))
-    
-    //     window.location = `/sending`
-    // })
-    
-    // if (window.location.pathname === "/usertemp") {
-    //     onUserTemp = true
-    //     getusertemp()
-    // } else (
-    //     onUserTemp = false
-    // )
 
+    $(document).on("click", ".temp-choose-group", function() {
+        var that = $(this)
+        prevData.groupid = parseInt(that.attr("value"))
+        prevData.grouplable = that.attr("data-lable")
+    
+        sessionStorage.removeItem('courierchosen')
+        sessionStorage.setItem('courierchosen', JSON.stringify(prevData))
+        
+        $.get(`/api/mailgroup/${user.id}`, function (data) {
+            mailArr = data
+            getUpdatedMailList()
+            window.location = `/sending`
+        })
+
+    })
+
+    if (window.location.pathname === "/usertemp") {
+        onUserTemp = true
+        getusertemp()
+        maillistByUser(createNewTempLi)
+    } else (
+        onUserTemp = false
+    )
 
 
 
@@ -460,8 +479,8 @@ $(function () {
         return emailLi
     }
 
-    // open email list edit module
-    $(document).on("click", ".card-mail", function () {
+     // open email list edit module
+     $(document).on("click", ".card-mail", function () {
         var groupName = $(this).attr("data-thisgroup")
         var groupId = $(this).attr("value")
         var arrPlace = arrPlaceById(parseInt(groupId))
@@ -633,9 +652,7 @@ $(function () {
         for (var r = 0; r < couriormail.length; r++) {
             mailTo = mailTo.concat(` ${couriormail[r].email},`)
         }
-        // couriormail.forEach(function(k) {
-        //     mailTo = mailTo.concat(` ${couriormail[r].email},`)
-        // })
+
         mailTo = mailTo.slice(0, -1)
         $("#all-the-emails").text(mailTo)
         $("#subject").text(couriorinfo.subject)
@@ -643,63 +660,57 @@ $(function () {
         $("#alias-input").val(couriorinfo.alias)
     }
 
+
     ///////////////////////////////
     //////// Preview Page /////////
     ///////////////////////////////
-    function goLogo() {
-        var Logo = $("#logo-input").val().trim();
-        console.log(Logo);
-        if (Logo !== "") {
-            $(".logo").attr("src", Logo);
+    $("#logo-input").focusout(function() {
+        var logo = $(this).val().trim();
+        console.log(logo);
+        if (logo !== "") {
+            $(".logo").attr("src", logo);
         }
-    }
+    });
 
-    function goMainImg() {
-        var mainImage = $("#main-image").val().trim();
+    $("#main-image").focusout(function() {
+        var mainImage = $(this).val().trim();
         console.log(mainImage);
         if (mainImage !== "") {
             $(".mainImg").attr("src", mainImage);
         }
-    }
+    });
 
-
-    function goName() {
-        var Name = $("#name-input").val().trim();
-        console.log(Name);
-        if (Name !== "") {
-            var tempName = $(".name");
-            tempName.html("<p>" + Name + "</p>");
+    $("#name-input").focusout(function() {
+        var name = $(this).val().trim();
+        console.log(name);
+        if (name !== "") {
+            $(".add-name").text(name)
         }
-    }
+    });
 
-    function goPosition() {
-        var currentPosition = $("#position-input").val().trim();
+    $("#position-input").focusout(function() {
+        var currentPosition = $(this).val().trim();
         console.log(currentPosition);
         if (currentPosition !== "") {
-            var tempPosition = $(".position");
-            tempPosition.html("<p>" + currentPosition + "<p>");
-
+            $(".add-position").text(currentPosition)
         }
-    }
+    });
 
-    function goTelephone() {
-        var Telephone = $("#telephone").val().trim();
-        console.log(Telephone);
-        if (Telephone !== "") {
-            var tempPhone = $(".telephone");
-            tempPhone.html("<p>" + Telephone + "<p>");
+    $("#telephone").focusout(function() {
+        var telephone = $(this).val().trim();
+        console.log(telephone);
+        if (telephone !== "") {
+            $(".telephone").text(telephone)
         }
-    }
+    });
 
-    function goEmail() {
-        var Email = $("#email-input").val().trim();
-        console.log(Email);
-        if (Email !== "") {
-            var tempEmail = $(".email");
-            tempEmail.html("<p>" + Email + "<p>");
-
+    $("#email-input").focusout(function() {
+        var email = $(this).val().trim();
+        console.log(email);
+        if (email !== "") {
+            $(".email").text(email)
         }
-    }
+    });
 
     function postHTML() {
         var getHTML = $("#temp-area-prev").html();
@@ -738,6 +749,10 @@ $(function () {
         clear()
         $.get(`/api/newtemp/${prevData.template}`, function (data) {
             $("#temp-area-prev").html(data.template)
+            $(".name").append("p").html("Name: <span class='add-name'>###name###</span>")
+            $(".email").append("p").html("Email: <span class='add-email'>john.do@email.com</span>")
+            $(".position").append("p").html("Position: <span class='add-position'>Jr Manager</span>")
+            $(".telephone").append("p").html("Telephone: <span class='add-telephone'>555-555-5555</span>")
         })
     }
 
@@ -760,12 +775,6 @@ $(function () {
             //adding the unsubscribe button onto the #temp-area-prev
             $("#temp-area-prev").children().last().children().last().append("<div style='width:100%;text-align:center'><a class = 'mj-column-per-100 outlook-group-fix' align = 'center' href = 'https://courier-heroku-app.herokuapp.com/api/unubscribe/###groupID###/###email###'>Click to unsubscribe from this mailing group</a></div>")
 
-            goLogo();
-            goMainImg();
-            goName();
-            goPosition();
-            goTelephone();
-            goEmail();
             var userTemp = postHTML();
             var emailInfo = { subject: subject, body: userTemp, alias: user.firstName }
 
