@@ -679,13 +679,13 @@ $(function () {
         }
     });
 
-    $("#name-input").focusout(function() {
-        var name = $(this).val().trim();
-        console.log(name);
-        if (name !== "") {
-            $(".add-name").text(name)
-        }
-    });
+    // $("#name-input").focusout(function() {
+    //     var name = $(this).val().trim();
+    //     console.log(name);
+    //     if (name !== "") {
+    //         $(".add-name").text(name)
+    //     }
+    // });
 
     $("#position-input").focusout(function() {
         var currentPosition = $(this).val().trim();
@@ -746,6 +746,7 @@ $(function () {
         window.location = "/newtemp"
     } else if (window.location.pathname === "/preview") {
         clear()
+        $(".add-name").text(`${user.firstName} ${user.lastName}`)
         $.get(`/api/newtemp/${prevData.template}`, function (data) {
             $("#temp-area-prev").html(data.template)
             $(".name").append("p").html("Name: <span class='add-name'>###name###</span>")
