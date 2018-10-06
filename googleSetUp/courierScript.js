@@ -21,6 +21,7 @@ function createMailList(mailList) {
     for (var i = 2; i < mailList.length + 2; i++) {
         sheet.getRange("A" + i).setValue(mailList[j].name);
         sheet.getRange("B" + i).setValue(mailList[j].email);
+        sheet.getRange("C" + i).setValue("");
         sheet.getRange("D" + i).setValue(mailList[j].groupID);
 
         j++;
@@ -55,16 +56,16 @@ function sendMails(emailInfo) {
     for (i = 2; i < count + 1; i++) {
         var user = {
             name: sheet.getRange("A" + i).getValue(),
-            firstname: user.name.split(' ')[0],
+            firstname: sheet.getRange("A" + i).getValue().split(' ')[0],
             mail: sheet.getRange("B" + i).getValue(),
             groupID: sheet.getRange("D" + i).getValue()
         };
 
         var subject = varString(emailInfo.subject,user);
-        var status = sheet.getRange("D" + i);
+        var status = sheet.getRange("C" + i);
         var body = varString(emailInfo.body, user);
 
-        if (status.isBlank()) {
+        if (status.isBlank() || status === "") {
             MailApp.sendEmail({
                 to: user.mail,
                 subject: subject,
