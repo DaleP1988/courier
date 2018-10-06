@@ -55,15 +55,9 @@ $(function () {
     ///////////////////////////////
     
 
-<<<<<<< HEAD
     // var dontSend = []
     // var sendOnly = []
     
-=======
-    var dontSend = []
-    var sendOnly = []
-
->>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
     // Page reload get all of user's mailgroups and maillists
     var maillistByUser = (cb) => {
         return new Promise((resolve, reject) => {
@@ -72,10 +66,6 @@ $(function () {
                 cb()
                 resolve()
             })
-<<<<<<< HEAD
-=======
-
->>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
         })
 
     }
@@ -96,10 +86,7 @@ $(function () {
 
     var onUserTemp
 
-<<<<<<< HEAD
     var getChosen
-=======
->>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
     // creat the lis after chosing the templates
     var createNewTempLi = () => {
         if ($.isEmptyObject(mailArr)) {
@@ -226,29 +213,17 @@ $(function () {
     // post emails to mailgroup list and get id back
     var postToMailGroup = (userId, groupName) => {
 
-        // creates the object for the Mailgroup
         var newMailGroup = {
             lable: groupName,
             UserId: user.id
         }
 
-        // post the mail group to database
         $.post("/api/mailgroup", newMailGroup)
             .then(function (result) {
-                // gets the group id
                 var id = result.id
-
-                // gets the Obj.key for the for column 1 (name)
                 var colName = Object.keys(emailArr[0])[0]
-                // gets the Obj.key for the for column 2 (email)
                 var colEmail = Object.keys(emailArr[0])[1]
-<<<<<<< HEAD
-
-                // loops through the emailArr array and check if it is a real email
-                // if true will run the postToMailList() function
-=======
                 var colCompany = Object.keys(emailArr[0])[2]
->>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
                 emailArr.forEach(function (e) {
                     if (/.+\@.+\..+/gi.test(e[colEmail]) && e[colName] !== "") {
                         postToMailList(id, e[colName], e[colEmail], e[colCompany], true)
@@ -351,10 +326,7 @@ $(function () {
             for (let i = 1; i < manualRowCount; i++) {
                 var name = $(`.input-${i} .input-field .manual-name`).val().trim()
                 var email = $(`.input-${i} .input-field .manual-email`).val().trim()
-                var company = $(`.input-${i} .input-field .manual-company`).val()
-                if (company) { company = company.trim() }
-
-                var obj = { name: name, email: email, company: company }
+                var obj = { name: name, email: email }
                 emailArr.push(obj)
             }
 
@@ -363,6 +335,7 @@ $(function () {
             $(".helper-text").text("there is an error somewhere, please check your entrys")
         }
     })
+
 
     // reset all
     var resetManual = () => {
@@ -383,10 +356,6 @@ $(function () {
     ///////////////////////////////
     /////// USER TEMPLATE ////////
     ///////////////////////////////
-<<<<<<< HEAD
-=======
-
->>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
     var tempArr = []
 
     var getusertemp = () => {
@@ -407,12 +376,16 @@ $(function () {
 
 
     $(document).on("click", ".user-card-template", function() {
-        
         var usertempid = parseInt($(this).attr("value"))
+        var t
+        for (var z = 0; z < tempArr.length; z++) {
+            if (tempArr[z].id === usertempid) {
+                t = z
+            }
+        }
         var subject = $(this).attr("data-subject")
-        var userTemp = tempArr[usertempid].body
+        var userTemp = tempArr[t].body
         userTemp = userTemp.concat("<div style='width:100%;text-align:center'><a class = 'mj-column-per-100 outlook-group-fix' align = 'center' href = 'https://courier-heroku-app.herokuapp.com/api/unubscribe/###groupID###/###email###'>Click to unsubscribe from this mailing group</a></div>")
-
         var emailInfo = { subject: subject, body: userTemp, alias: user.firstName }
         sessionStorage.removeItem('courieremailinfo')
         sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
@@ -439,16 +412,6 @@ $(function () {
 
     })
 
-
-
-
-
-
-
-
-
-
-    
     if (window.location.pathname === "/usertemp") {
         onUserTemp = true
         getusertemp()
@@ -457,10 +420,6 @@ $(function () {
         onUserTemp = false
     )
 
-<<<<<<< HEAD
-=======
-
->>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
 
 
     ///////////////////////////////
@@ -520,8 +479,8 @@ $(function () {
         return emailLi
     }
 
-    // open email list edit module
-    $(document).on("click", ".card-mail", function () {
+     // open email list edit module
+     $(document).on("click", ".card-mail", function () {
         var groupName = $(this).attr("data-thisgroup")
         var groupId = $(this).attr("value")
         var arrPlace = arrPlaceById(parseInt(groupId))
@@ -701,63 +660,57 @@ $(function () {
         $("#alias-input").val(couriorinfo.alias)
     }
 
+
     ///////////////////////////////
     //////// Preview Page /////////
     ///////////////////////////////
-    function goLogo() {
-        var Logo = $("#logo-input").val().trim();
-        console.log(Logo);
-        if (Logo !== "") {
-            $(".logo").attr("src", Logo);
+    $("#logo-input").focusout(function() {
+        var logo = $(this).val().trim();
+        console.log(logo);
+        if (logo !== "") {
+            $(".logo").attr("src", logo);
         }
-    }
+    });
 
-    function goMainImg() {
-        var mainImage = $("#main-image").val().trim();
+    $("#main-image").focusout(function() {
+        var mainImage = $(this).val().trim();
         console.log(mainImage);
         if (mainImage !== "") {
             $(".mainImg").attr("src", mainImage);
         }
-    }
+    });
 
-
-    function goName() {
-        var Name = $("#name-input").val().trim();
-        console.log(Name);
-        if (Name !== "") {
-            var tempName = $(".name");
-            tempName.html("<p>" + Name + "</p>");
+    $("#name-input").focusout(function() {
+        var name = $(this).val().trim();
+        console.log(name);
+        if (name !== "") {
+            $(".add-name").text(name)
         }
-    }
+    });
 
-    function goPosition() {
-        var currentPosition = $("#position-input").val().trim();
+    $("#position-input").focusout(function() {
+        var currentPosition = $(this).val().trim();
         console.log(currentPosition);
         if (currentPosition !== "") {
-            var tempPosition = $(".position");
-            tempPosition.html("<p>" + currentPosition + "<p>");
-
+            $(".add-position").text(currentPosition)
         }
-    }
+    });
 
-    function goTelephone() {
-        var Telephone = $("#telephone").val().trim();
-        console.log(Telephone);
-        if (Telephone !== "") {
-            var tempPhone = $(".telephone");
-            tempPhone.html("<p>" + Telephone + "<p>");
+    $("#telephone").focusout(function() {
+        var telephone = $(this).val().trim();
+        console.log(telephone);
+        if (telephone !== "") {
+            $(".telephone").text(telephone)
         }
-    }
+    });
 
-    function goEmail() {
-        var Email = $("#email-input").val().trim();
-        console.log(Email);
-        if (Email !== "") {
-            var tempEmail = $(".email");
-            tempEmail.html("<p>" + Email + "<p>");
-
+    $("#email-input").focusout(function() {
+        var email = $(this).val().trim();
+        console.log(email);
+        if (email !== "") {
+            $(".email").text(email)
         }
-    }
+    });
 
     function postHTML() {
         var getHTML = $("#temp-area-prev").html();
@@ -790,30 +743,21 @@ $(function () {
         sessionStorage.setItem('couriermaillist', JSON.stringify(mailList))
     }
 
-<<<<<<< HEAD
-    if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') !== null) {
-=======
     if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') === null) {
         window.location = "/newtemp"
     } else if (window.location.pathname === "/preview") {
->>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
         clear()
         $.get(`/api/newtemp/${prevData.template}`, function (data) {
             $("#temp-area-prev").html(data.template)
+            $(".name").append("p").html("Name: <span class='add-name'>###name###</span>")
+            $(".email").append("p").html("Email: <span class='add-email'>john.do@email.com</span>")
+            $(".position").append("p").html("Position: <span class='add-position'>Jr Manager</span>")
+            $(".telephone").append("p").html("Telephone: <span class='add-telephone'>555-555-5555</span>")
         })
-<<<<<<< HEAD
-    } else if(window.location.pathname === "/preview") {
-        window.history.back()
-    } 
-    
-    $("#user-temp-lable").on("keyup", function() {
-        if($("#user-temp-lable").val().trim().length > 0) {
-=======
     }
 
     $("#user-temp-lable").on("keyup", function () {
         if ($("#user-temp-lable").val().trim().length > 0) {
->>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
             $("#prev-submit").removeClass("disabled")
         } else {
             $("#prev-submit").addClass("disabled")
@@ -831,12 +775,6 @@ $(function () {
             //adding the unsubscribe button onto the #temp-area-prev
             $("#temp-area-prev").children().last().children().last().append("<div style='width:100%;text-align:center'><a class = 'mj-column-per-100 outlook-group-fix' align = 'center' href = 'https://courier-heroku-app.herokuapp.com/api/unubscribe/###groupID###/###email###'>Click to unsubscribe from this mailing group</a></div>")
 
-            goLogo();
-            goMainImg();
-            goName();
-            goPosition();
-            goTelephone();
-            goEmail();
             var userTemp = postHTML();
             var emailInfo = { subject: subject, body: userTemp, alias: user.firstName }
 
