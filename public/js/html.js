@@ -30,8 +30,8 @@ $(function () {
                 method: "PUT",
                 url: "/api/img",
 
-                data: {bgimg: changebg, googleUser: user.googleUser}
-            }).then(function(result) {
+                data: { bgimg: changebg, googleUser: user.googleUser }
+            }).then(function (result) {
                 $(".sidenav-background").attr("src", changebg)
                 $("#bg-changer").val("")
             });
@@ -55,9 +55,15 @@ $(function () {
     ///////////////////////////////
     
 
+<<<<<<< HEAD
     // var dontSend = []
     // var sendOnly = []
     
+=======
+    var dontSend = []
+    var sendOnly = []
+
+>>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
     // Page reload get all of user's mailgroups and maillists
     var maillistByUser = (cb) => {
         return new Promise((resolve, reject) => {
@@ -66,6 +72,10 @@ $(function () {
                 cb()
                 resolve()
             })
+<<<<<<< HEAD
+=======
+
+>>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
         })
 
     }
@@ -73,7 +83,7 @@ $(function () {
     // var filterUnsubscribe = (id) => {
     //     var place = arrPlaceById(parseInt(id))
     //     var thisMailGroup = maiArr[place]
-        
+
     //     thisMailGroup.forEach(function(i) {
     //         if (i.unsubscribe) {
     //             dontSend.push()
@@ -83,9 +93,13 @@ $(function () {
     //     })
     // }
 
+
     var onUserTemp
 
+<<<<<<< HEAD
     var getChosen
+=======
+>>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
     // creat the lis after chosing the templates
     var createNewTempLi = () => {
         if ($.isEmptyObject(mailArr)) {
@@ -228,22 +242,27 @@ $(function () {
                 var colName = Object.keys(emailArr[0])[0]
                 // gets the Obj.key for the for column 2 (email)
                 var colEmail = Object.keys(emailArr[0])[1]
+<<<<<<< HEAD
 
                 // loops through the emailArr array and check if it is a real email
                 // if true will run the postToMailList() function
+=======
+                var colCompany = Object.keys(emailArr[0])[2]
+>>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
                 emailArr.forEach(function (e) {
                     if (/.+\@.+\..+/gi.test(e[colEmail]) && e[colName] !== "") {
-                        postToMailList(id, e[colName], e[colEmail], true)
+                        postToMailList(id, e[colName], e[colEmail], e[colCompany], true)
                     }
                 })
             })
     }
 
     // post emails to maillist
-    var postToMailList = (GroupId, name, email, bool) => {
+    var postToMailList = (GroupId, name, email, company, bool) => {
         var newMail = {
             name: name,
             email: email,
+            company:company,
             MailGroupId: GroupId
         }
 
@@ -296,7 +315,7 @@ $(function () {
         // Create new div
         if (checkEmail) {
             manualRowCount += 1
-            var newDiv = $(`<div class="input-${manualRowCount}"><div class="input-field col s6"><input type="text" class="validate manual-name" placeholder="Contact Full Name"></div><div class="input-field col s6"><input type="email" class="validate manual-email" placeholder="Contact Email Address"></div></div>`)
+            var newDiv = $(`<div class="input-${manualRowCount}"><div class="input-field col s4"><input type="text" class="validate manual-name" placeholder="Contact Full Name"></div><div class="input-field col s4"><input type="email" class="validate manual-email" placeholder="Contact Email Address"></div><div class="input-field col s4"><input type="text" class="validate manual-company" placeholder="Contact Company Name"></div></div>`)
 
             $("#manual-rows").append(newDiv)
         }
@@ -305,8 +324,11 @@ $(function () {
         if (!checkEmail) {
             var secRowName = $(`.input-${manualRowCount - 1} .input-field .manual-name`).val()
             var secRowEmail = $(`.input-${manualRowCount - 1} .input-field .manual-email`).val()
+            var secRowCompany = $(`.input-${manualRowCount - 1} .input-field .manual-company`).val()
             var lastRowName = $(`.input-${manualRowCount} .input-field .manual-name`).val()
             var lastRowEmail = $(`.input-${manualRowCount} .input-field .manual-email`).val()
+            var lastRowCompany = $(`.input-${manualRowCount} .input-field .manual-company`).val()
+
 
             if (lastRowName === "" && lastRowEmail === "" && secRowName === "" && secRowEmail === "") {
                 $(`.input-${manualRowCount}`).remove()
@@ -329,7 +351,10 @@ $(function () {
             for (let i = 1; i < manualRowCount; i++) {
                 var name = $(`.input-${i} .input-field .manual-name`).val().trim()
                 var email = $(`.input-${i} .input-field .manual-email`).val().trim()
-                var obj = { name: name, email: email }
+                var company = $(`.input-${i} .input-field .manual-company`).val()
+                if (company) { company = company.trim() }
+
+                var obj = { name: name, email: email, company: company }
                 emailArr.push(obj)
             }
 
@@ -346,7 +371,7 @@ $(function () {
 
         // delete all but first manual entry
         $("#manual-rows").empty()
-        var newDiv = $(`<div class="input-${manualRowCount}"><div class="input-field col s6"><input type="text" class="validate manual-name" placeholder="Contact Full Name"></div><div class="input-field col s6"><input type="email" class="validate manual-email" placeholder="Contact Email Address"></div></div>`)
+        var newDiv = $(`<div class="input-${manualRowCount}"><div class="input-field col s4"><input type="text" class="validate manual-name" placeholder="Contact Full Name"></div><div class="input-field col s4"><input type="email" class="validate manual-email" placeholder="Contact Email Address"></div><div class="input-field col s4"><input type="text" class="validate manual-company" placeholder="Contact Company Name"></div></div>`)
         $("#manual-rows").append(newDiv)
 
         // clear all inputs
@@ -358,6 +383,10 @@ $(function () {
     ///////////////////////////////
     /////// USER TEMPLATE ////////
     ///////////////////////////////
+<<<<<<< HEAD
+=======
+
+>>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
     var tempArr = []
 
     var getusertemp = () => {
@@ -428,6 +457,10 @@ $(function () {
         onUserTemp = false
     )
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
 
 
     ///////////////////////////////
@@ -671,110 +704,123 @@ $(function () {
     ///////////////////////////////
     //////// Preview Page /////////
     ///////////////////////////////
-    function goLogo(){
-        var Logo = $("#logo-input").val().trim(); 
+    function goLogo() {
+        var Logo = $("#logo-input").val().trim();
         console.log(Logo);
-        if(Logo !== ""){
+        if (Logo !== "") {
             $(".logo").attr("src", Logo);
         }
     }
-    
-    function goMainImg(){
+
+    function goMainImg() {
         var mainImage = $("#main-image").val().trim();
         console.log(mainImage);
-        if(mainImage !== ""){
-            $(".mainImg").attr("src" , mainImage);
+        if (mainImage !== "") {
+            $(".mainImg").attr("src", mainImage);
         }
     }
-    
-    
-    function goName(){
-        var Name =  $("#name-input").val().trim();
+
+
+    function goName() {
+        var Name = $("#name-input").val().trim();
         console.log(Name);
-        if(Name !== ""){
+        if (Name !== "") {
             var tempName = $(".name");
-            tempName.html("<p>" + Name  + "</p>");
+            tempName.html("<p>" + Name + "</p>");
         }
     }
-    
-    function goPosition(){
-        var currentPosition =  $("#position-input").val().trim();
+
+    function goPosition() {
+        var currentPosition = $("#position-input").val().trim();
         console.log(currentPosition);
-        if(currentPosition !== ""){
+        if (currentPosition !== "") {
             var tempPosition = $(".position");
             tempPosition.html("<p>" + currentPosition + "<p>");
-        
-        } 
+
+        }
     }
-    
-    function goTelephone(){
-        var Telephone =  $("#telephone").val().trim();
+
+    function goTelephone() {
+        var Telephone = $("#telephone").val().trim();
         console.log(Telephone);
-        if(Telephone !== ""){
+        if (Telephone !== "") {
             var tempPhone = $(".telephone");
             tempPhone.html("<p>" + Telephone + "<p>");
-        } 
+        }
     }
-    
-    function goEmail(){
+
+    function goEmail() {
         var Email = $("#email-input").val().trim();
         console.log(Email);
-        if(Email !== ""){
+        if (Email !== "") {
             var tempEmail = $(".email");
             tempEmail.html("<p>" + Email + "<p>");
-        
-        } 
+
+        }
     }
-    
-    function postHTML(){
+
+    function postHTML() {
         var getHTML = $("#temp-area-prev").html();
-        getHTML = getHTML.replace(/\s\s+/g,"")
+        getHTML = getHTML.replace(/\s\s+/g, "")
         console.log(getHTML);
-        return getHTML 
+        return getHTML
     }
-    
+
     //clear form fields
-    function clear(){
+    function clear() {
         $("#logo-input").val("");
         $("#main-image").val("");
         $("#name-input").val("");
         $("#position-input").val("");
         $("#telephone").val("");
-        $("#email-input").val("");   
+        $("#email-input").val("");
     }
-    
+
     var getUpdatedMailList = () => {
         var id = prevData.groupid
         var place = arrPlaceById(parseInt(id))
         var mailListArr = mailArr[place].MailLists
         var mailList = []
-        mailListArr.forEach(function(i) {
-            var data = { name: i.name, email: i.email, groupID: id }
+        mailListArr.forEach(function (i) {
+            var data = { name: i.name, email: i.email, groupID: id, company:i.company }
             mailList.push(data)
         })
-        
+
         sessionStorage.removeItem('couriermaillist')
         sessionStorage.setItem('couriermaillist', JSON.stringify(mailList))
     }
 
+<<<<<<< HEAD
     if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') !== null) {
+=======
+    if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') === null) {
+        window.location = "/newtemp"
+    } else if (window.location.pathname === "/preview") {
+>>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
         clear()
-        $.get(`/api/newtemp/${prevData.template}`, function(data) {
+        $.get(`/api/newtemp/${prevData.template}`, function (data) {
             $("#temp-area-prev").html(data.template)
         })
+<<<<<<< HEAD
     } else if(window.location.pathname === "/preview") {
         window.history.back()
     } 
     
     $("#user-temp-lable").on("keyup", function() {
         if($("#user-temp-lable").val().trim().length > 0) {
+=======
+    }
+
+    $("#user-temp-lable").on("keyup", function () {
+        if ($("#user-temp-lable").val().trim().length > 0) {
+>>>>>>> ddcb334d5bc30634cf06d4b05b072f78179b7a21
             $("#prev-submit").removeClass("disabled")
         } else {
             $("#prev-submit").addClass("disabled")
         }
     })
 
-    
+
     // The real functionallity
     $("#prev-submit").on("click", function () {
         maillistByUser(getUpdatedMailList).then(function () {
@@ -803,4 +849,4 @@ $(function () {
     })
 
 })
-    
+
