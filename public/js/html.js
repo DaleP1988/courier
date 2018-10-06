@@ -665,7 +665,6 @@ $(function () {
     ///////////////////////////////
     $("#logo-input").focusout(function() {
         var logo = $(this).val().trim();
-        console.log(logo);
         if (logo !== "") {
             $(".logo").attr("src", logo);
         }
@@ -673,7 +672,6 @@ $(function () {
 
     $("#main-image").focusout(function() {
         var mainImage = $(this).val().trim();
-        console.log(mainImage);
         if (mainImage !== "") {
             $(".mainImg").attr("src", mainImage);
         }
@@ -689,7 +687,6 @@ $(function () {
 
     $("#position-input").focusout(function() {
         var currentPosition = $(this).val().trim();
-        console.log(currentPosition);
         if (currentPosition !== "") {
             $(".add-position").text(currentPosition)
         }
@@ -697,7 +694,6 @@ $(function () {
 
     $("#telephone").focusout(function() {
         var telephone = $(this).val().trim();
-        console.log(telephone);
         if (telephone !== "") {
             $(".telephone").text(telephone)
         }
@@ -705,7 +701,6 @@ $(function () {
 
     $("#email-input").focusout(function() {
         var email = $(this).val().trim();
-        console.log(email);
         if (email !== "") {
             $(".email").text(email)
         }
@@ -714,7 +709,6 @@ $(function () {
     function postHTML() {
         var getHTML = $("#temp-area-prev").html();
         getHTML = getHTML.replace(/\s\s+/g, "")
-        console.log(getHTML);
         return getHTML
     }
 
