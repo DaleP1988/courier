@@ -385,7 +385,6 @@ $(function () {
         }
         var subject = $(this).attr("data-subject")
         var userTemp = tempArr[t].body
-        userTemp = userTemp.concat("<div style='width:100%;text-align:center'><a class = 'mj-column-per-100 outlook-group-fix' align = 'center' href = 'https://courier-heroku-app.herokuapp.com/api/unubscribe/###groupID###/###email###'>Click to unsubscribe from this mailing group</a></div>")
         var emailInfo = { subject: subject, body: userTemp, alias: user.firstName }
         sessionStorage.removeItem('courieremailinfo')
         sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
