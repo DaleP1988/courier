@@ -56,8 +56,8 @@ $(function() {
     var sendOnly = []
     
     // Page reload get all of user's mailgroups and maillists
-    var maillistByUser = async (cb) => {
-        await $.get(`/api/mailgroup/${user.id}`, function(data) {
+    var maillistByUser = (cb) => {
+        $.get(`/api/mailgroup/${user.id}`, function(data) {
             mailArr = data
             cb()
         })
@@ -76,7 +76,7 @@ $(function() {
     //     })
     // }
 
-    
+    var onUserTemp
     // creat the lis after chosing the templates
     var createNewTempLi = () => {
         if ($.isEmptyObject(mailArr)) {
@@ -85,7 +85,12 @@ $(function() {
             for (var w = 0; w < mailArr.length; w++) {
                 var groupId = mailArr[w].id
                 var groupLable = mailArr[w].lable
-                var groupLi = `<div>${groupLable}<a class="secondary-content choose-group" value="${groupId}" data-lable="${groupLable}"><i class="material-icons">send</i></a></div>`
+                var groupLi
+                if (onUserTemp) {
+                    groupLi = `<div>${groupLable}<a class="secondary-content temp-choose-group" value="${groupId}" data-lable="${groupLable}"><i class="material-icons">send</i></a></div>`
+                } else {
+                    groupLi = `<div>${groupLable}<a class="secondary-content choose-group" value="${groupId}" data-lable="${groupLable}"><i class="material-icons">send</i></a></div>`
+                }
                 $(".mail-group-choose .collection").append($("<li>").addClass("collection-item").html(groupLi))
             }
         }
@@ -336,8 +341,50 @@ $(function() {
     ///////////////////////////////
     /////// USER TEMPLATE ////////
     ///////////////////////////////
+    var tempArr = []
+
+    var getusertemp = () => {
+        $.get(`/api/usertemp/${user.id}`, function(data) {
+            tempArr = data
+
+            $(".temp-card-holder").empty()
+            for (var e = 0; e < tempArr.length; e++) {
+                makeTempCard(e)
+            }
+        })
+    }
+
+    var makeTempCard = (place) => {
+        var $card = $("<div>").addClass("col s12 m4").html(`<div class="card user-card-template modal-trigger" data-template="${tempArr[place].template}" data-target="modal-user-temp" value="${tempArr[place].id}"><div class="card-image"><img class="card-img" src="/images/colorways/${tempArr[place].template}.png"><div class="card__text center"><h4 class="card__title">${tempArr[place].template}</h4><p class="card__body">${tempArr[place].lable}</p></div></div></div>`)
+        $(".temp-card-holder").append($card)
+    }
+
+    $(document).on("click", ".user-card-template", function() {
+        maillistByUser(createNewTempLi)
+    })
+
+    // $(document).on("click", ".temp-choose-group", function() {
+    //     var choices = {}
+    //     choices.template = $(this).attr("data-chosen")
+    //     choices.groupid = $(this).attr("value")
+    //     choices.grouplable = $(this).attr("data-lable")
+    //     choices.user = user.id
     
+    //     sessionStorage.removeItem('courierchosen')
+    //     sessionStorage.setItem('courierchosen', JSON.stringify(choices))
     
+    //     window.location = `/sending`
+    // })
+    
+    // if (window.location.pathname === "/usertemp") {
+    //     onUserTemp = true
+    //     getusertemp()
+    // } else (
+    //     onUserTemp = false
+    // )
+
+
+
     ///////////////////////////////
     /////// USER MAIL LIST ////////
     ///////////////////////////////

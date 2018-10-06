@@ -172,6 +172,20 @@ module.exports = function(app) {
     });
   });
 
+    // Find New Templat HTML
+    app.get("/api/usertemp/:userid", function (req, res) {
+      db.Temps.findAll({
+        where: {
+          UserId: req.params.userid
+        }
+      }).then(function (result) {
+        res.json(result);
+      })
+      .catch(function(err) {
+        res.status(400).json(err);
+      });
+    });
+
   // Create User Temp
   app.post("/api/usertemp", function(req, res) {
     db.Temps.create(req.body)

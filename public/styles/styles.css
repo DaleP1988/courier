@@ -235,20 +235,26 @@ nav {
   width: 100%;
 }
 
-.card-template {
+.card-template,
+.user-card-template {
   position: relative;
   background: #000000b3;
 }
 
 .card-template:hover,
+.user-card-template:hover,
 .choose-group:hover,
+.temp-choose-group:hover,
 .update-email:hover,
 .clear-email:hover,
 .done-email:hover {
   cursor: pointer;
 }
 
-.card-template::before, .card-template::after {
+.card-template::before,
+.card-template::after,
+.user-card-template::before,
+.user-card-template::after {
   content: '';
   position: absolute;
   top: 1.25em;
@@ -261,23 +267,27 @@ nav {
   transition: transform ease-out 250ms, -webkit-transform ease-out 250ms;
 }
 
-.card-template::before {
+.card-template::before,
+.user-card-template::before {
   border-top: 1px solid white;
   border-bottom: 1px solid white;
   -webkit-transform: scale(0, 1);
           transform: scale(0, 1);
 }
-.card-template::after {
+.card-template::after,
+.user-card-template::after {
   border-left: 1px solid white;
   border-right: 1px solid white;
   -webkit-transform: scale(1, 0);
           transform: scale(1, 0);
 }
-.card-template:hover::before {
+.card-template:hover::before,
+.user-card-template:hover::before {
   -webkit-transform: scale(1.05, 1);
           transform: scale(1.05, 1);
 }
-.card-template:hover::after {
+.card-template:hover::after,
+.user-card-template:hover::after {
   -webkit-transform: scale(1, 1.05);
           transform: scale(1, 1.05);
 }
@@ -290,6 +300,27 @@ nav {
 
 .card:hover .card-img {
   opacity: .4;
+}
+
+.card__text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  color: white;
+  opacity: 0;
+  transition: opacity ease-out 250ms;
+}
+
+.card:hover .card__text {
+  opacity: 1;
+}
+
+.card__title {
+  font-size: 2rem;
+  color: white;
+  margin-bottom: 0;
 }
 
 /* About Page */
