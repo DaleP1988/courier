@@ -3,6 +3,7 @@ $(function () {
     var user = JSON.parse(sessionStorage.getItem('courieruser'))
     var prevData = JSON.parse(sessionStorage.getItem('courierchosen'))
     var emailArr = [] // needed for importing emails to mailLists table
+    var mailArr
     var manualRowCount = 1 // needed for create new manual rows
 
     // reset user when logoff
@@ -52,20 +53,22 @@ $(function () {
     ///////////////////////////////
     //////// NEW TEMPLATES ////////
     ///////////////////////////////
-    var mailArr
+    
 
     // var dontSend = []
     // var sendOnly = []
     
     // Page reload get all of user's mailgroups and maillists
     var maillistByUser = (cb) => {
-        $.get(`/api/mailgroup/${user.id}`, function(data) {
-            mailArr = data
-            cb()
+        return new Promise((resolve, reject) => {
+            $.get(`/api/mailgroup/${user.id}`, function (data) {
+                mailArr = data
+                cb()
+                resolve()
+            })
         })
 
     }
-
 
     // var filterUnsubscribe = (id) => {
     //     var place = arrPlaceById(parseInt(id))
@@ -209,16 +212,25 @@ $(function () {
     // post emails to mailgroup list and get id back
     var postToMailGroup = (userId, groupName) => {
 
+        // creates the object for the Mailgroup
         var newMailGroup = {
             lable: groupName,
             UserId: user.id
         }
 
+        // post the mail group to database
         $.post("/api/mailgroup", newMailGroup)
             .then(function (result) {
+                // gets the group id
                 var id = result.id
+
+                // gets the Obj.key for the for column 1 (name)
                 var colName = Object.keys(emailArr[0])[0]
+                // gets the Obj.key for the for column 2 (email)
                 var colEmail = Object.keys(emailArr[0])[1]
+
+                // loops through the emailArr array and check if it is a real email
+                // if true will run the postToMailList() function
                 emailArr.forEach(function (e) {
                     if (/.+\@.+\..+/gi.test(e[colEmail]) && e[colName] !== "") {
                         postToMailList(id, e[colName], e[colEmail], true)
@@ -360,26 +372,53 @@ $(function () {
     }
 
     var makeTempCard = (place) => {
-        var $card = $("<div>").addClass("col s12 m4").html(`<div class="card user-card-template modal-trigger" data-template="${tempArr[place].template}" data-target="modal-user-temp" value="${tempArr[place].id}"><div class="card-image"><img class="card-img" src="/images/colorways/${tempArr[place].template}.png"><div class="card__text center"><h4 class="card__title">${tempArr[place].template}</h4><p class="card__body">${tempArr[place].lable}</p></div></div></div>`)
+        var $card = $("<div>").addClass("col s12 m4").html(`<div class="card user-card-template modal-trigger" data-template="${tempArr[place].template}" data-subject="${tempArr[place].lable}" data-target="modal-user-temp" value="${tempArr[place].id}"><div class="card-image"><img class="card-img" src="/images/colorways/${tempArr[place].template}.png"><div class="card__text center"><h5 class="card__title">${tempArr[place].template}</h5><p class="card__body">${tempArr[place].lable}</p></div></div></div>`)
         $(".temp-card-holder").append($card)
     }
 
+
     $(document).on("click", ".user-card-template", function() {
         
+        var usertempid = parseInt($(this).attr("value"))
+        var subject = $(this).attr("data-subject")
+        var userTemp = tempArr[usertempid].body
+        userTemp = userTemp.concat("<div style='width:100%;text-align:center'><a class = 'mj-column-per-100 outlook-group-fix' align = 'center' href = 'https://courier-heroku-app.herokuapp.com/api/unubscribe/###groupID###/###email###'>Click to unsubscribe from this mailing group</a></div>")
+
+        var emailInfo = { subject: subject, body: userTemp, alias: user.firstName }
+        sessionStorage.removeItem('courieremailinfo')
+        sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
+
+        prevData = {}
+        prevData.template = $(this).attr("data-template")
+        prevData.user = user.id
     })
 
-    // $(document).on("click", ".temp-choose-group", function() {
-    //     var choices = {}
-    //     choices.template = $(this).attr("data-chosen")
-    //     choices.groupid = $(this).attr("value")
-    //     choices.grouplable = $(this).attr("data-lable")
-    //     choices.user = user.id
+
+    $(document).on("click", ".temp-choose-group", function() {
+        var that = $(this)
+        prevData.groupid = parseInt(that.attr("value"))
+        prevData.grouplable = that.attr("data-lable")
     
-    //     sessionStorage.removeItem('courierchosen')
-    //     sessionStorage.setItem('courierchosen', JSON.stringify(choices))
-    
-    //     window.location = `/sending`
-    // })
+        sessionStorage.removeItem('courierchosen')
+        sessionStorage.setItem('courierchosen', JSON.stringify(prevData))
+        
+        $.get(`/api/mailgroup/${user.id}`, function (data) {
+            mailArr = data
+            getUpdatedMailList()
+            window.location = `/sending`
+        })
+
+    })
+
+
+
+
+
+
+
+
+
+
     
     if (window.location.pathname === "/usertemp") {
         onUserTemp = true
@@ -621,9 +660,7 @@ $(function () {
         for (var r = 0; r < couriormail.length; r++) {
             mailTo = mailTo.concat(` ${couriormail[r].email},`)
         }
-        // couriormail.forEach(function(k) {
-        //     mailTo = mailTo.concat(` ${couriormail[r].email},`)
-        // })
+
         mailTo = mailTo.slice(0, -1)
         $("#all-the-emails").text(mailTo)
         $("#subject").text(couriorinfo.subject)
@@ -719,15 +756,15 @@ $(function () {
         sessionStorage.removeItem('couriermaillist')
         sessionStorage.setItem('couriermaillist', JSON.stringify(mailList))
     }
-    
-    if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') === null) {
-        window.location = "/newtemp"
-    } else if (window.location.pathname === "/preview") {
+
+    if (window.location.pathname === "/preview" && sessionStorage.getItem('courierchosen') !== null) {
         clear()
         $.get(`/api/newtemp/${prevData.template}`, function(data) {
             $("#temp-area-prev").html(data.template)
         })
-    }
+    } else if(window.location.pathname === "/preview") {
+        window.history.back()
+    } 
     
     $("#user-temp-lable").on("keyup", function() {
         if($("#user-temp-lable").val().trim().length > 0) {
@@ -739,28 +776,30 @@ $(function () {
 
     
     // The real functionallity
-    $("#prev-submit").on("click", function() {
-        maillistByUser(getUpdatedMailList)
-        filterUnsubscribe(id)
-        // var mailList = JSON.parse(sessionStorage.getItem('couriermaillist'))
-        var subject = $("#user-temp-lable").val().trim()
-        
-        //adding the unsubscribe button onto the #temp-area-prev
-        $("#temp-area-prev").children().last().children().last().append("<div style='width:100%;text-align:center'><a class = 'mj-column-per-100 outlook-group-fix' align = 'center' href = 'https://courier-heroku-app.herokuapp.com/api/unubscribe/###groupID###/###email###'>Click to unsubscribe from this mailing group</a></div>")
+    $("#prev-submit").on("click", function () {
+        maillistByUser(getUpdatedMailList).then(function () {
+            // filterUnsubscribe(id)
+            // var mailList = JSON.parse(sessionStorage.getItem('couriermaillist'))
+            var subject = $("#user-temp-lable").val().trim()
 
-        goLogo();
-        goMainImg();
-        goName();
-        goPosition();
-        goTelephone();
-        goEmail();
-        var userTemp = postHTML();
-        var emailInfo = {subject: subject, body: userTemp, alias: user.firstName}
-    
-        sessionStorage.removeItem('courieremailinfo')
-        sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
-    
-        window.location = "/sending"
+            //adding the unsubscribe button onto the #temp-area-prev
+            $("#temp-area-prev").children().last().children().last().append("<div style='width:100%;text-align:center'><a class = 'mj-column-per-100 outlook-group-fix' align = 'center' href = 'https://courier-heroku-app.herokuapp.com/api/unubscribe/###groupID###/###email###'>Click to unsubscribe from this mailing group</a></div>")
+
+            goLogo();
+            goMainImg();
+            goName();
+            goPosition();
+            goTelephone();
+            goEmail();
+            var userTemp = postHTML();
+            var emailInfo = { subject: subject, body: userTemp, alias: user.firstName }
+
+            sessionStorage.removeItem('courieremailinfo')
+            sessionStorage.setItem('courieremailinfo', JSON.stringify(emailInfo))
+
+            window.location = "/sending"
+        })
+
     })
 
 })
