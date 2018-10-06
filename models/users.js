@@ -24,6 +24,12 @@ module.exports = function (sequelize, DataTypes) {
         emailReqLink: {
             type: DataTypes.STRING,
         },
+        bgimg: {
+            type: DataTypes.TEXT,
+            validate: {
+                len: [1]
+            }
+        },
         img: {
             type: DataTypes.TEXT,
             validate: {

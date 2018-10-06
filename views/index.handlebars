@@ -15,13 +15,11 @@
     function onSignIn(googleUser) {
         // Useful data for your client-side scripts:
         var profile = googleUser.getBasicProfile()
-        //var id = profile.getId()
         var user = {}
-        var other
         user.firstName = profile.getGivenName()
         user.lastName = profile.getFamilyName()
         user.googleUser = profile.getEmail()
-        //user.img = profile.getImageUrl()
+        user.img = profile.getImageUrl()
 
         $.get(`/api/user/${user.googleUser}`, function(data) {
             if(data) {
@@ -34,18 +32,14 @@
                     console.log(result)
                     if (data.emailReqLink) {
                         if (sessionStorage.getItem("couriersignin") !== null) {
-                            other = user
-                            other.img = profile.getImageUrl()
-                            other.emailReqLink = data.emailReqLink
+                            user.emailReqLink = data.emailReqLink
                             sessionStorage.removeItem('courieruser')
-                            sessionStorage.setItem('courieruser', JSON.stringify(other))
+                            sessionStorage.setItem('courieruser', JSON.stringify(user))
                             window.location = "/first"
                         }
                     } else {
-                        other = user
-                        other.img = profile.getImageUrl()
                         sessionStorage.removeItem('courieruser')
-                        sessionStorage.setItem('courieruser', JSON.stringify(other))
+                        sessionStorage.setItem('courieruser', JSON.stringify(user))
                         window.location = "/installation"
                     }
                 });
