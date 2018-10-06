@@ -740,10 +740,9 @@ $(function () {
         window.location = "/newtemp"
     } else if (window.location.pathname === "/preview") {
         clear()
-        $(".add-name").text(`${user.firstName} ${user.lastName}`)
         $.get(`/api/newtemp/${prevData.template}`, function (data) {
             $("#temp-area-prev").html(data.template)
-            $(".name").append("p").html("Name: <span class='add-name'>###name###</span>")
+            $(".add-name").text(`${user.firstName} ${user.lastName}`)
             $(".email").append("p").html("Email: <span class='add-email'>john.do@email.com</span>")
             $(".position").append("p").html("Position: <span class='add-position'>Jr Manager</span>")
             $(".telephone").append("p").html("Telephone: <span class='add-telephone'>555-555-5555</span>")
