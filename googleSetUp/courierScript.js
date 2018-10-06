@@ -16,6 +16,7 @@ function createMailList(mailList) {
     sheet.getRange("B1").setValue("Email");
     sheet.getRange("C1").setValue("Status");
     sheet.getRange("D1").setValue("groupID");
+    sheet.getRange("E1").setValue("groupID");
 
     j = 0;
     for (var i = 2; i < mailList.length + 2; i++) {
@@ -23,6 +24,7 @@ function createMailList(mailList) {
         sheet.getRange("B" + i).setValue(mailList[j].email);
         sheet.getRange("C" + i).setValue("");
         sheet.getRange("D" + i).setValue(mailList[j].groupID);
+        sheet.getRange("E" + i).setValue(mailList[j].company);
 
         j++;
     };
@@ -45,6 +47,7 @@ function varString(str, user) {
     newStr = newStr.replace("###fname###", user.firstname);
     newStr = newStr.replace("###groupID###", user.groupID);
     newStr = newStr.replace("###email###", user.mail);
+    newStr = newStr.replace("###company###", user.company);
 
     return newStr;
 };
@@ -52,16 +55,16 @@ function varString(str, user) {
 function sendMails(emailInfo) {
     var count = filledCount();
 
-
     for (i = 2; i < count + 1; i++) {
         var user = {
             name: sheet.getRange("A" + i).getValue(),
             firstname: sheet.getRange("A" + i).getValue().split(' ')[0],
             mail: sheet.getRange("B" + i).getValue(),
-            groupID: sheet.getRange("D" + i).getValue()
+            groupID: sheet.getRange("D" + i).getValue(),
+            company: sheet.getRange("E" + i).getValue()
         };
 
-        var subject = varString(emailInfo.subject,user);
+        var subject = varString(emailInfo.subject, user);
         var status = sheet.getRange("C" + i);
         var body = varString(emailInfo.body, user);
 
